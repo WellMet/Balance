@@ -12,30 +12,26 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Home.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Home#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Home extends Fragment implements View.OnClickListener {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private Data data;
 
     private OnFragmentInteractionListener mListener;
 
     // UI Components
     private TextView banner;
     private FloatingActionButton currentProgress;
+    private ProgressBar progress;
     private TextView quickHeader;
     private FloatingActionButton quickAction;
     private BottomNavigationView navigation;
@@ -46,11 +42,10 @@ public class Home extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static Home newInstance(String param1, String param2) {
+    public static Home newInstance(Data param1) {
         Home fragment = new Home();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,8 +54,7 @@ public class Home extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            data = (Data) getArguments().getSerializable("data");
         }
     }
 
@@ -69,12 +63,13 @@ public class Home extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Initialize the GUI Elements
         navigation = (BottomNavigationView) view.findViewById(R.id.navigation);
         banner = (TextView) view.findViewById(R.id.welcomeBanner);
         currentProgress = (FloatingActionButton) view.findViewById(R.id.currentProgress);
+        progress = (ProgressBar) view.findViewById(R.id.progressBar);
         quickHeader = (TextView) view.findViewById(R.id.textView);
         quickAction = (FloatingActionButton) view.findViewById(R.id.quickAction);
         currentProgress.setOnClickListener(this);
@@ -85,13 +80,6 @@ public class Home extends Fragment implements View.OnClickListener {
         setupUI();
 
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -113,7 +101,6 @@ public class Home extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
         switch(view.getId()) {
             case R.id.currentProgress:
                 MenuItem item = navigation.getMenu().getItem(2);
@@ -128,12 +115,18 @@ public class Home extends Fragment implements View.OnClickListener {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(int rId);
     }
 
     public void setupUI() {
-
+        // Load current weeks progress
+        ArrayList<String> weeks = new ArrayList<String>(data.getHistory().keySet());
+        if (weeks.size() > 0) {
+            Collections.sort(weeks);
+            progress.setProgress(data.getOverallProgress(weeks.get(weeks.size() - 1)));
+        } else {
+            progress.setProgress(0);
+        }
     }
 
     protected void loadFragment(Fragment fragment) {

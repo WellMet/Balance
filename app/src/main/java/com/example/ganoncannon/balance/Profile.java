@@ -1,6 +1,8 @@
 package com.example.ganoncannon.balance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ganoncannon on 11/30/17.
@@ -8,35 +10,42 @@ import java.util.ArrayList;
 
 public class Profile {
     private Data data;
-    private int textSize;
-    private String fontType;
     private VoiceGeneration voice;
-    private ArrayList<String> objects;
     private Controller controller;
+    private HashMap<String, Integer> goals;
+    private HashMap settings;
+    public static final double RUN_WEIGHT = 0.50;
+    public static final double TIME_WEIGHT = 0.25;
+    public static final double SPEED_WEIGHT = 0.15;
+    public static final double DIF_WEIGHT = 0.10;
+
 
     public Profile(Controller cont) {
-        data = new Data();
-        textSize = 14;
-        fontType = "Georgia";
-        voice = new VoiceGeneration(this);
-        objects = new ArrayList<String>();
-        objects.add("Red");
-        objects.add("Blue");
-        objects.add("Green");
+        if (!loadSettings()) {
+            settings = new HashMap();
+            settings.put("textSize", 14);
+            settings.put("fontType", "Georgia");
+            ArrayList<String> init_objects = new ArrayList<String>();
+            init_objects.add("red");
+            init_objects.add("blue");
+            init_objects.add("green");
+            settings.put("objects", init_objects);
+        }
+        voice = new VoiceGeneration(settings);
         controller = cont;
+        goals = new HashMap<String, Integer>();
+        goals.put("attempts", 3);
+        goals.put("difficulty", 1);
+        goals.put("speed", 5);
+        goals.put("time", 300);
+        data = new Data(goals);
     }
 
-    public Profile(Controller cont, Boolean load) {
-        loadData();
-        loadSettings();
-        voice = new VoiceGeneration(this);
+    public boolean loadSettings() {
+        return false;
     }
 
-    public void loadData() {
-
-    }
-
-    public void loadSettings() {
+    public void writeSettings() {
 
     }
 
@@ -48,22 +57,6 @@ public class Profile {
         this.data = Data;
     }
 
-    public int getTextSize() {
-        return textSize;
-    }
-
-    public void setTextSize(int textSize) {
-        this.textSize = textSize;
-    }
-
-    public String getFontType() {
-        return fontType;
-    }
-
-    public void setFontType(String fontType) {
-        this.fontType = fontType;
-    }
-
     public VoiceGeneration getVoice() {
         return voice;
     }
@@ -72,19 +65,27 @@ public class Profile {
         this.voice = voice;
     }
 
-    public ArrayList<String> getObjects() {
-        return objects;
-    }
-
-    public void setObjects(ArrayList<String> objects) {
-        this.objects = objects;
-    }
-
     public Controller getController() {
         return controller;
     }
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+
+    public HashMap<String, Integer> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(HashMap goals) {
+        this.goals = goals;
+    }
+
+    public HashMap getSettings() {
+        return settings;
+    }
+
+    public void setSettings(HashMap settings) {
+        this.settings = settings;
     }
 }

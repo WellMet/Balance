@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton6"
+            android:id="@+id/startButton"
             android:layout_width="143dp"
             android:layout_height="144dp"
             android:layout_marginBottom="8dp"
@@ -22,13 +22,13 @@
             android:clickable="true"
             android:src="@drawable/circular"
             app:backgroundTint="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="@+id/progressBar5"
-            app:layout_constraintEnd_toEndOf="@+id/progressBar5"
-            app:layout_constraintStart_toStartOf="@+id/progressBar5"
-            app:layout_constraintTop_toTopOf="@+id/progressBar5" />
+            app:layout_constraintBottom_toBottomOf="@+id/exerciseProgress"
+            app:layout_constraintEnd_toEndOf="@+id/exerciseProgress"
+            app:layout_constraintStart_toStartOf="@+id/exerciseProgress"
+            app:layout_constraintTop_toTopOf="@+id/exerciseProgress" />
 
         <ProgressBar
-            android:id="@+id/progressBar5"
+            android:id="@+id/exerciseProgress"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="179dp"
             android:layout_height="189dp"
@@ -51,7 +51,7 @@
             app:layout_constraintVertical_bias="0.728" />
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/speedSlider"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="367dp"
             android:layout_height="35dp"
@@ -66,28 +66,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar5"
+            app:layout_constraintTop_toBottomOf="@+id/exerciseProgress"
             app:layout_constraintVertical_bias="0.157" />
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/difBanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="Difficulty"
             android:textSize="14pt"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintEnd_toStartOf="@+id/toggleButton"
+            app:layout_constraintEnd_toStartOf="@+id/difToggle"
             app:layout_constraintHorizontal_bias="0.506"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.766" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/startBanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -99,32 +96,13 @@
             android:text="STOP"
             android:textColor="@color/colorAccent"
             android:textSize="14pt"
-            app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton6"
-            app:layout_constraintEnd_toEndOf="@+id/floatingActionButton6"
-            app:layout_constraintStart_toStartOf="@+id/floatingActionButton6"
-            app:layout_constraintTop_toTopOf="@+id/floatingActionButton6" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="367dp"
-            android:layout_height="54dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:ems="10"
-            android:gravity="center_vertical|center_horizontal"
-            android:inputType="time"
-            android:selectAllOnFocus="false"
-            android:text="12:30"
-            android:textColor="@color/colorAccent"
-            android:textSize="14pt"
-            app:layout_constraintBottom_toTopOf="@+id/progressBar5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/startButton"
+            app:layout_constraintEnd_toEndOf="@+id/startButton"
+            app:layout_constraintStart_toStartOf="@+id/startButton"
+            app:layout_constraintTop_toTopOf="@+id/startButton" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/speedBanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -136,22 +114,32 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/seekBar"
+            app:layout_constraintTop_toBottomOf="@+id/speedSlider"
             app:layout_constraintVertical_bias="0.0" />
 
         <ToggleButton
-            android:id="@+id/toggleButton"
+            android:id="@+id/difToggle"
             android:layout_width="127dp"
             android:layout_height="46dp"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="36dp"
             android:layout_marginTop="8dp"
             android:textOff="Normal"
             android:textOn="Random"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.884" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <NumberPicker
+            android:id="@+id/timer"
+            android:layout_width="111dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/difBanner" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

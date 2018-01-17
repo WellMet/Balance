@@ -3,50 +3,46 @@ package com.example.ganoncannon.balance;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.NumberPicker;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import java.util.HashMap;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Exercise.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Exercise#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Exercise extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class Exercise extends Fragment implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, NumberPicker.OnValueChangeListener, SeekBar.OnSeekBarChangeListener {
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private HashMap<String, Integer> goals;
 
     private OnFragmentInteractionListener mListener;
+
+    //UI Components
+    private TextView difBanner;
+    private TextView speedBanner;
+    private TextView startBanner;
+    private ToggleButton difToggle;
+    private NumberPicker timer;
+    private FloatingActionButton startButton;
+    private ProgressBar progressBar;
+    private SeekBar speedSlider;
+
+    View view;
 
     public Exercise() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Exercise.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Exercise newInstance(String param1, String param2) {
+    public static Exercise newInstance(HashMap<String, Integer> param1) {
         Exercise fragment = new Exercise();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,8 +51,7 @@ public class Exercise extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            goals = (HashMap<String, Integer>) getArguments().getSerializable("data");
         }
     }
 
@@ -64,14 +59,27 @@ public class Exercise extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_exercise, container, false);
-    }
+        view = inflater.inflate(R.layout.fragment_exercise, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        // Init UI
+        difBanner = (TextView) view.findViewById(R.id.difBanner);
+        difToggle = (ToggleButton) view.findViewById(R.id.difToggle);
+        timer = (NumberPicker) view.findViewById(R.id.timer);
+        startButton = (FloatingActionButton) view.findViewById(R.id.startButton);
+        startBanner = (TextView) view.findViewById(R.id.startBanner);
+        progressBar = (ProgressBar) view.findViewById(R.id.exerciseProgress);
+        speedBanner = (TextView) view.findViewById(R.id.speedBanner);
+        speedSlider = (SeekBar) view.findViewById(R.id.speedSlider);
+
+        // Initialize
+        setupUI();
+
+        difToggle.setOnCheckedChangeListener(this);
+        startButton.setOnClickListener(this);
+        timer.setOnValueChangedListener(this);
+        speedSlider.setOnSeekBarChangeListener(this);
+
+        return view;
     }
 
     @Override
@@ -91,18 +99,57 @@ public class Exercise extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        // User clicked the Start/Stop toggle button.  Check timer value and adjust behavior
+        //if (time > 0) && startBanner.getText().equals("Start"), startBanner.setText("Stop") etc...
+        mListener.onFragmentInteraction(R.id.startButton);
+    }
+
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+        mListener.onFragmentInteraction(numberPicker.getId());
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(int rId);
+    }
+
+    public void setupUI() {
+        difBanner.setText(R.string.dif_banner);
+        if (goals.get("difficulty") == 1) {
+            difToggle.setChecked(false);
+        }
+        else if (goals.get("difficulty") == 2) {
+            difToggle.setChecked(true);
+        }
+        timer.setValue(goals.get("time") / 60);
+        timer.setMaxValue(15);
+        timer.setMinValue(5);
+        startBanner.setText(R.string.start);
+        progressBar.setProgress(0);
+        progressBar.setMax(timer.getValue()*60); // Progress bar tracks seconds
+        speedSlider.setMax(10);
+        speedSlider.setProgress(goals.get("speed"));
     }
 }

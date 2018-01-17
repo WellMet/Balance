@@ -7,6 +7,13 @@
     <string name="title_settings">Settings</string>
     <string name="title_history">History</string>
 
+    <string name="dif_banner">Difficulty</string>
+    <string name="norm_dif">Normal</string>
+    <string name="rand_dif">Random</string>
+    <string name="speed_banner">Speed</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
