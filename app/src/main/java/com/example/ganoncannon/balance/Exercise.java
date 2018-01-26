@@ -101,19 +101,28 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
+        HashMap h = new HashMap();
+        h.put("id", difToggle.getId());
+        h.put("value", b);
+        mListener.onFragmentInteraction(h);
     }
 
     @Override
     public void onClick(View view) {
         // User clicked the Start/Stop toggle button.  Check timer value and adjust behavior
         //if (time > 0) && startBanner.getText().equals("Start"), startBanner.setText("Stop") etc...
-        mListener.onFragmentInteraction(R.id.startButton);
+        HashMap h = new HashMap();
+        h.put("id", startButton.getId());
+        h.put("state", startBanner.getText());
+        mListener.onFragmentInteraction(h);
     }
 
     @Override
-    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-        mListener.onFragmentInteraction(numberPicker.getId());
+    public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+        HashMap h = new HashMap();
+        h.put("id", numberPicker.getId());
+        h.put("value", newVal);
+        mListener.onFragmentInteraction(h);
     }
 
     @Override
@@ -128,11 +137,14 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
+        HashMap h = new HashMap();
+        h.put("id", seekBar.getId());
+        h.put("value", seekBar.getProgress());
+        mListener.onFragmentInteraction(h);
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int rId);
+        void onFragmentInteraction(HashMap h);
     }
 
     public void setupUI() {
@@ -143,9 +155,9 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         else if (goals.get("difficulty") == 2) {
             difToggle.setChecked(true);
         }
-        timer.setValue(goals.get("time") / 60);
         timer.setMaxValue(15);
         timer.setMinValue(5);
+        timer.setValue(goals.get("time") / 60);
         startBanner.setText(R.string.start);
         progressBar.setProgress(0);
         progressBar.setMax(timer.getValue()*60); // Progress bar tracks seconds

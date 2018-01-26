@@ -31,6 +31,7 @@ public class Home extends Fragment implements View.OnClickListener {
     // UI Components
     private TextView banner;
     private FloatingActionButton currentProgress;
+    private TextView progBanner;
     private ProgressBar progress;
     private TextView quickHeader;
     private FloatingActionButton quickAction;
@@ -68,14 +69,14 @@ public class Home extends Fragment implements View.OnClickListener {
         // Initialize the GUI Elements
         navigation = (BottomNavigationView) view.findViewById(R.id.navigation);
         banner = (TextView) view.findViewById(R.id.welcomeBanner);
+        progBanner = (TextView) view.findViewById(R.id.progText);
         currentProgress = (FloatingActionButton) view.findViewById(R.id.currentProgress);
         progress = (ProgressBar) view.findViewById(R.id.progressBar);
         quickHeader = (TextView) view.findViewById(R.id.textView);
         quickAction = (FloatingActionButton) view.findViewById(R.id.quickAction);
         currentProgress.setOnClickListener(this);
         quickAction.setOnClickListener(this);
-
-
+        
         // Setup Elements to correct values based on profile (history, week #)
         setupUI();
 
@@ -101,21 +102,23 @@ public class Home extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        HashMap h = new HashMap();
         switch(view.getId()) {
             case R.id.currentProgress:
-                MenuItem item = navigation.getMenu().getItem(2);
-                item.setChecked(true);
-                loadFragment(new History());
+                h.put("id", R.id.currentProgress);
+                h.put("menu", navigation.getMenu().getItem(2));
+                mListener.onFragmentInteraction(h);
                 break;
             case R.id.quickAction:
-                navigation.setSelectedItemId(R.id.navigation_exercise);
-                loadFragment(new Exercise());
+                h.put("id", R.id.quickAction);
+                h.put("menu", navigation.getMenu().getItem(1));
+                mListener.onFragmentInteraction(h);
                 break;
         }
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int rId);
+        void onFragmentInteraction(HashMap h);
     }
 
     public void setupUI() {
@@ -127,6 +130,7 @@ public class Home extends Fragment implements View.OnClickListener {
         } else {
             progress.setProgress(0);
         }
+        progBanner.setText(Integer.toString(progress.getProgress()));
     }
 
     protected void loadFragment(Fragment fragment) {

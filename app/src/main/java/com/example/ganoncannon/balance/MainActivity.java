@@ -9,9 +9,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements
         Home.OnFragmentInteractionListener,
@@ -76,26 +78,32 @@ public class MainActivity extends AppCompatActivity implements
     }
 
         @Override
-        public void onFragmentInteraction(int rId) {
+        public void onFragmentInteraction(HashMap h) {
+            int rId = (int) h.get("id");
             switch(rId) {
                 // Home Screen Links
                 case R.id.currentProgress:
+                    mOnNavigationItemSelectedListener.onNavigationItemSelected((MenuItem)h.get("menu"));
                     break;
                 case R.id.quickAction:
+                    mOnNavigationItemSelectedListener.onNavigationItemSelected((MenuItem)h.get("menu"));
                     break;
-                // Exercise Screen Links
+                // Exercise Screen Data Links
                 case R.id.timer:
-                    System.out.println("got to timer yay");
+                    controller.setChosenTime((int)h.get("value"));
                     break;
                 case R.id.startButton:
-                    System.out.println("mega poop");
+                    controller.setState((String)h.get("state"));
                     break;
                 case R.id.difToggle:
+                    controller.setChosenDif((boolean)(h.get("value")) ? 1 : 0);
                     break;
                 case R.id.speedSlider:
+                    controller.setChosenSpeed((int)h.get("value"));
                     break;
-                // History Screen Links
-
+                // History Screen Data Links
+                    // Not needed, no controller action necessary
+                // Settings Screen Data Links
             }
         }
 }

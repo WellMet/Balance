@@ -91,10 +91,16 @@ public class Data implements Serializable{
 
     public double getAverageOf(String week, String of) {
         int sum = 0;
-        for(int i = 0; i < history.get(week).size(); i++) {
-            sum += history.get(week).get(i).get(of);
+
+        if (history.get(week).size() > 0) {
+            for (int i = 0; i < history.get(week).size(); i++) {
+                sum += history.get(week).get(i).get(of);
+            }
+            return sum / history.get(week).size();
         }
-        return sum / history.get(week).size();
+        else {
+            return 0;
+        }
     }
 
     public int getProgressScore(String week, String of) {

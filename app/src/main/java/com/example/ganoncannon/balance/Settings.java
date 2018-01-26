@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +87,6 @@ public class Settings extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int rId);
+        void onFragmentInteraction(HashMap h);
     }
 }

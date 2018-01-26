@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class History extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
@@ -60,7 +61,7 @@ public class History extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_history, container, false);
 
         firstWeek = (TextView) view.findViewById(R.id.firstWeek);
         firstProgress = (ProgressBar) view.findViewById(R.id.firstProgress);
@@ -133,6 +134,7 @@ public class History extends Fragment implements View.OnClickListener {
         secondProgress.setProgress(prog2);
         thirdWeek.setText(week3);
         thirdPercent.setText(Integer.toString(prog3));
+        thirdProgress.setProgress(prog3);
     }
 
     @Override
@@ -152,6 +154,6 @@ public class History extends Fragment implements View.OnClickListener {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(int rId);
+        void onFragmentInteraction(HashMap h);
     }
 }
