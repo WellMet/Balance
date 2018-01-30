@@ -42,6 +42,9 @@ public class Controller {
 
     public void setState(String state) {
         this.state = state;
+        user.getVoice().setState(state);
+        if (state.equals("intro") || state.equals("outro") || state.equals("commands") || state.equals("paused"))
+            user.getVoice().speak();
     }
 
     public int getChosenDif() {
@@ -50,6 +53,7 @@ public class Controller {
 
     public void setChosenDif(int chosenDif) {
         this.chosenDif = chosenDif;
+        user.getVoice().setChosenDif(chosenDif);
     }
 
     public int getChosenSpeed() {
@@ -58,6 +62,7 @@ public class Controller {
 
     public void setChosenSpeed(int chosenSpeed) {
         this.chosenSpeed = chosenSpeed;
+        user.getVoice().setChosenSpeed(chosenSpeed);
     }
 
     public int getChosenTime() {
@@ -66,5 +71,6 @@ public class Controller {
 
     public void setChosenTime(int chosenTime) {
         this.chosenTime = chosenTime;
+        user.getVoice().setChosenTime(chosenTime);
     }
 }

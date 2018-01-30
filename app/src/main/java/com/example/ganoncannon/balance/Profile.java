@@ -26,9 +26,9 @@ public class Profile {
             settings.put("textSize", 14);
             settings.put("fontType", "Georgia");
             ArrayList<String> init_objects = new ArrayList<String>();
-            init_objects.add("red");
-            init_objects.add("blue");
             init_objects.add("green");
+            init_objects.add("blue");
+            init_objects.add("red");
             settings.put("objects", init_objects);
         }
         voice = new VoiceGeneration(settings);
