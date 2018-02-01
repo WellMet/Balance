@@ -1,6 +1,7 @@
 package com.example.ganoncannon.balance;
 
-import android.net.Uri;
+import android.content.Context;
+import android.media.AudioManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -9,8 +10,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.NumberPicker;
-import android.widget.TextView;
+import android.view.WindowManager;
+import android.provider.Settings;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -19,9 +20,12 @@ public class MainActivity extends AppCompatActivity implements
         Home.OnFragmentInteractionListener,
         Exercise.OnFragmentInteractionListener,
         History.OnFragmentInteractionListener,
-        Settings.OnFragmentInteractionListener {
+        Configs.OnFragmentInteractionListener {
 
     public Controller controller;
+    public AudioManager audMgr;
+    public int originalVolume;
+    public int originalBrightness;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 case R.id.navigation_settings:
                     item.setChecked(true);
-                    loadFragment(new Settings(), controller.getUser().getSettings());
+                    loadFragment(new Configs(), controller.getUser().getSettings());
                     break;
             }
             return false;
@@ -59,6 +63,17 @@ public class MainActivity extends AppCompatActivity implements
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
+
+        // Turn up max volume, remember old version for when the app is closed, paused, etc...
+        audMgr = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        originalVolume = audMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        audMgr.setStreamVolume(AudioManager.STREAM_MUSIC, audMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
+
+        // Keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Turn up max brightness, remember old value
+        originalBrightness = Settings.System.getInt(getApplicationContext().getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,0);
     }
 
 
@@ -109,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 // History Screen Data Links
                     // Not needed, no controller action necessary
-                // Settings Screen Data Links
+                // Configs Screen Data Links
             }
         }
 }
