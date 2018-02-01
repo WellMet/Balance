@@ -58,7 +58,8 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            goals = (HashMap<String, Integer>) getArguments().getSerializable("data");
+            Profile p = (Profile) getArguments().getSerializable("data");
+            goals = p.getGoals();
         }
     }
 
@@ -247,6 +248,13 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         progressBar.setMax(100); // Progress bar tracks seconds
         speedSlider.setMax(10);
         speedSlider.setProgress(goals.get("speed"));
+
+        Profile p = (Profile) getArguments().getSerializable("data");
+        startBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        difBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        startBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        speedBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        difToggle.setTextSize(1, (int)p.getSettings().get("textSize"));
     }
 
     public void exerciseSequence(int mill) {

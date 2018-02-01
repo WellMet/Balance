@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.provider.Settings;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -35,19 +37,19 @@ public class MainActivity extends AppCompatActivity implements
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     item.setChecked(true);
-                    loadFragment(new Home(), controller.getUser().getData());
+                    loadFragment(new Home(), controller.getUser());
                     break;
                 case R.id.navigation_exercise:
                     item.setChecked(true);
-                    loadFragment(new Exercise(), controller.getUser().getGoals());
+                    loadFragment(new Exercise(), controller.getUser());
                     break;
                 case R.id.navigation_history:
                     item.setChecked(true);
-                    loadFragment(new History(), controller.getUser().getData());
+                    loadFragment(new History(), controller.getUser());
                     break;
                 case R.id.navigation_settings:
                     item.setChecked(true);
-                    loadFragment(new Configs(), controller.getUser().getSettings());
+                    loadFragment(new Configs(), controller.getUser());
                     break;
             }
             return false;
@@ -57,23 +59,22 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller(this.getApplicationContext().getFilesDir().getPath());
+        // Keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Turn up max volume or load last volume, remember old version for when the app is closed, paused, etc...
+        audMgr = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        originalVolume = audMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        // Load backend
+        controller = new Controller(this.getApplicationContext().getFilesDir().getPath(), audMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         controller.getUser().getVoice().setContext(this.getApplicationContext());
+        audMgr.setStreamVolume(AudioManager.STREAM_MUSIC, (int)controller.getUser().getSettings().get("volume"), 0);
+
         setContentView(R.layout.activity_main);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
-
-        // Turn up max volume, remember old version for when the app is closed, paused, etc...
-        audMgr = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        originalVolume = audMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        audMgr.setStreamVolume(AudioManager.STREAM_MUSIC, audMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);
-
-        // Keep screen on
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        // Turn up max brightness, remember old value
-        originalBrightness = Settings.System.getInt(getApplicationContext().getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,0);
     }
 
 
@@ -125,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements
                 // History Screen Data Links
                     // Not needed, no controller action necessary
                 // Configs Screen Data Links
+                case R.id.fontSizeBar:
+                    controller.getUser().setFontSize((int)h.get("fontSize"));
+                    break;
+                case R.id.objectMain:
+                    controller.getUser().setObject((String)h.get("object"), (int)h.get("index"));
+                    break;
+                case R.id.volumeBar:
+                    controller.getUser().setVolume((int)h.get("volume"));
+                    audMgr.setStreamVolume(AudioManager.STREAM_MUSIC, (int)controller.getUser().getSettings().get("volume"), 0);
+                    break;
             }
         }
 }

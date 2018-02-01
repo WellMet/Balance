@@ -2,6 +2,12 @@ package com.example.ganoncannon.balance;
 
 import android.content.Context;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,28 +16,33 @@ import java.util.Map;
  * Created by ganoncannon on 11/30/17.
  */
 
-public class Profile {
+public class Profile implements Serializable{
     private Data data;
     private VoiceGeneration voice;
     private Controller controller;
     private HashMap<String, Integer> goals;
     private HashMap settings;
+    private String context;
     public static final double RUN_WEIGHT = 0.50;
     public static final double TIME_WEIGHT = 0.25;
     public static final double SPEED_WEIGHT = 0.15;
     public static final double DIF_WEIGHT = 0.10;
 
 
-    public Profile(Controller cont, String context) {
-        if (!loadSettings()) {
+    public Profile(Controller cont, String context, int maxVolume) {
+        this.context = context;
+        if (!readSettings()) {
             settings = new HashMap();
-            settings.put("textSize", 14);
+            settings.put("textSize", 30);
             settings.put("fontType", "Georgia");
             ArrayList<String> init_objects = new ArrayList<String>();
             init_objects.add("green");
             init_objects.add("blue");
             init_objects.add("red");
             settings.put("objects", init_objects);
+            settings.put("volume", maxVolume);
+            settings.put("brightness", 255);
+            settings.put("maxVolume", maxVolume);
         }
         voice = new VoiceGeneration(settings);
         controller = cont;
@@ -43,12 +54,35 @@ public class Profile {
         data = new Data(goals, context);
     }
 
-    public boolean loadSettings() {
-        return false;
+    public void writeSettings() {
+        try {
+            FileOutputStream fstream = new FileOutputStream(context + "settings.ser");
+            ObjectOutputStream ostream = new ObjectOutputStream(fstream);
+            ostream.writeObject(settings);
+            ostream.close();
+            fstream.close();
+            System.out.println("write settings success");
+        } catch (IOException err) {
+            err.printStackTrace();
+        }
     }
 
-    public void writeSettings() {
-
+    public boolean readSettings() {
+        try {
+            FileInputStream istream = new FileInputStream(context + "settings.ser");
+            ObjectInputStream ostream = new ObjectInputStream(istream);
+            settings = (HashMap) ostream.readObject();
+            ostream.close();
+            istream.close();
+            System.out.println("read settings success");
+            return true;
+        } catch (IOException err){
+            err.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException cErr) {
+            cErr.printStackTrace();
+            return false;
+        }
     }
 
     public Data getData() {
@@ -89,5 +123,30 @@ public class Profile {
 
     public void setSettings(HashMap settings) {
         this.settings = settings;
+    }
+
+    public void setFontSize(int size) {
+        // Convert from seekbar to dp
+        settings.put("textSize", size + 15);
+        writeSettings();
+    }
+
+    public void setObject(String s, int index) {
+        ArrayList<String> objects = (ArrayList<String>) settings.get("objects");
+        if (objects != null) {
+            objects.set(index, s);
+            settings.put("objects", objects);
+        }
+        writeSettings();
+    }
+
+    public void setVolume(int v) {
+        settings.put("volume", v);
+        writeSettings();
+    }
+
+    public void setBrightness(int b) {
+        settings.put("brightness", b);
+        writeSettings();
     }
 }

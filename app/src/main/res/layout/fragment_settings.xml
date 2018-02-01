@@ -171,28 +171,6 @@
                 android:background="@android:color/darker_gray" />
 
             <TextView
-                android:id="@+id/brightnessLabel"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:text="Brightness"
-                android:textColor="@color/colorAcc3"
-                android:textSize="35dp" />
-
-            <SeekBar
-                android:id="@+id/brightnessBar"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:max="255"
-                android:progress="255" />
-
-            <View
-                android:id="@+id/view3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
                 android:id="@+id/volumeLabel"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

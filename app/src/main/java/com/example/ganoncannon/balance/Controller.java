@@ -19,8 +19,8 @@ public class Controller {
     private int chosenSpeed;
     private int chosenTime;
 
-    public Controller(String context) {
-        user = new Profile(this, context);
+    public Controller(String context, int maxVolume) {
+        user = new Profile(this, context, maxVolume);
         chosenTime = user.getGoals().get("time");
         chosenDif = user.getGoals().get("difficulty");
         chosenSpeed = user.getGoals().get("speed");

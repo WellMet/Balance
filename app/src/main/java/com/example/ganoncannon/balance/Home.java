@@ -55,7 +55,8 @@ public class Home extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            data = (Data) getArguments().getSerializable("data");
+            Profile p = (Profile) getArguments().getSerializable("data");
+            data = p.getData();
         }
     }
 
@@ -132,6 +133,10 @@ public class Home extends Fragment implements View.OnClickListener {
             progress.setProgress(0);
         }
         progBanner.setText(Integer.toString(progress.getProgress()));
+        Profile p = (Profile) getArguments().getSerializable("data");
+        banner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        progBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
+        quickHeader.setTextSize(1, (int)p.getSettings().get("textSize"));
     }
 
     protected void loadFragment(Fragment fragment) {

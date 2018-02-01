@@ -52,7 +52,8 @@ public class History extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            data = (Data) getArguments().getSerializable("data");
+            Profile p = (Profile) getArguments().getSerializable("data");
+            data = p.getData();
         }
     }
 
@@ -135,6 +136,14 @@ public class History extends Fragment implements View.OnClickListener {
         thirdWeek.setText("Week " + week3);
         thirdPercent.setText(Integer.toString(prog3));
         thirdProgress.setProgress(prog3);
+
+        Profile p = (Profile) getArguments().getSerializable("data");
+        firstWeek.setTextSize(1, (int)p.getSettings().get("textSize"));
+        firstPercent.setTextSize(1, (int)p.getSettings().get("textSize"));
+        secondWeek.setTextSize(1, (int)p.getSettings().get("textSize"));
+        secondPercent.setTextSize(1, (int)p.getSettings().get("textSize"));
+        thirdWeek.setTextSize(1, (int)p.getSettings().get("textSize"));
+        thirdPercent.setTextSize(1, (int)p.getSettings().get("textSize"));
     }
 
     @Override

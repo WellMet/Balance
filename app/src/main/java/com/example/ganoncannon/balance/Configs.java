@@ -3,30 +3,36 @@ package com.example.ganoncannon.balance;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Configs.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Configs#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Configs extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private HashMap settings;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView sizeBanner;
+    private SeekBar sizeBar;
+    private TextView objBanner;
+    private TextView obj1Banner;
+    private TextView obj2Banner;
+    private TextView obj3Banner;
+    private EditText obj1Edit;
+    private EditText obj2Edit;
+    private EditText obj3Edit;
+    private TextView volumeBanner;
+    private SeekBar volumeBar;
+
+    public View view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -34,20 +40,10 @@ public class Configs extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Configs.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Configs newInstance(String param1, String param2) {
+    public static Configs newInstance(HashMap param1) {
         Configs fragment = new Configs();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +52,8 @@ public class Configs extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            Profile p = (Profile) getArguments().getSerializable("data");
+            settings = p.getSettings();
         }
     }
 
@@ -65,7 +61,111 @@ public class Configs extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        sizeBanner = (TextView) view.findViewById(R.id.fontSizeLabel);
+        objBanner = (TextView) view.findViewById(R.id.objectMain);
+        obj1Banner = (TextView) view.findViewById(R.id.obj1);
+        obj2Banner = (TextView) view.findViewById(R.id.obj2);
+        obj3Banner = (TextView) view.findViewById(R.id.obj3);
+        volumeBanner = (TextView) view.findViewById(R.id.volumeLabel);
+        obj1Edit = (EditText) view.findViewById(R.id.obj1Edit);
+        obj2Edit = (EditText) view.findViewById(R.id.obj2Edit);
+        obj3Edit = (EditText) view.findViewById(R.id.obj3Edit);
+        sizeBar = (SeekBar) view.findViewById(R.id.fontSizeBar);
+        volumeBar = (SeekBar) view.findViewById(R.id.volumeBar);
+
+        obj1Edit.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                HashMap h = new HashMap();
+                if (obj1Edit.getText().toString().equals(""))
+                    h.put("object", obj1Edit.getHint().toString());
+                else
+                    h.put("object", obj1Edit.getText().toString());
+                h.put("index", 0);
+                h.put("id", objBanner.getId());
+                mListener.onFragmentInteraction(h);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        obj2Edit.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                HashMap h = new HashMap();
+                if (obj2Edit.getText().toString().equals(""))
+                    h.put("object", obj2Edit.getHint().toString());
+                else
+                    h.put("object", obj2Edit.getText().toString());
+                h.put("index", 1);
+                h.put("id", objBanner.getId());
+                mListener.onFragmentInteraction(h);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        obj3Edit.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                HashMap h = new HashMap();
+                if (obj3Edit.getText().toString().equals(""))
+                    h.put("object", obj3Edit.getHint().toString());
+                else
+                    h.put("object", obj3Edit.getText().toString());
+                h.put("index", 2);
+                h.put("id", objBanner.getId());
+                mListener.onFragmentInteraction(h);
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        sizeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                HashMap h = new HashMap();
+                h.put("fontSize", i);
+                h.put("id", sizeBar.getId());
+                mListener.onFragmentInteraction(h);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                setupUI();
+            }
+        });
+
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                HashMap h = new HashMap();
+                h.put("volume", i);
+                h.put("id", volumeBar.getId());
+                mListener.onFragmentInteraction(h);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        setupUI();
+
+        return view;
     }
 
     @Override
@@ -83,6 +183,25 @@ public class Configs extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void setupUI() {
+        ArrayList<String> objects = (ArrayList<String>) settings.get("objects");
+        sizeBanner.setTextSize(1, (int)settings.get("textSize"));
+        obj1Banner.setTextSize(1, (int)settings.get("textSize"));
+        obj2Banner.setTextSize(1, (int)settings.get("textSize"));
+        obj3Banner.setTextSize(1, (int)settings.get("textSize"));
+        obj1Edit.setTextSize(1, (int)settings.get("textSize"));
+        obj2Edit.setTextSize(1, (int)settings.get("textSize"));
+        obj3Edit.setTextSize(1, (int)settings.get("textSize"));
+        objBanner.setTextSize(1, (int)settings.get("textSize"));
+        volumeBanner.setTextSize(1, (int)settings.get("textSize"));
+        sizeBar.setProgress((int)settings.get("textSize") - 15);
+        obj1Edit.setText(objects.get(0));
+        obj2Edit.setText(objects.get(1));
+        obj3Edit.setText(objects.get(2));
+        volumeBar.setMax((int)settings.get("maxVolume"));
+        volumeBar.setProgress((int)settings.get("volume"));
     }
 
     public interface OnFragmentInteractionListener {
