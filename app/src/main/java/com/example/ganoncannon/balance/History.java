@@ -4,7 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class History extends Fragment implements View.OnClickListener {
+public class History extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private Data data;
 
@@ -77,6 +80,33 @@ public class History extends Fragment implements View.OnClickListener {
         thirdPercent = (TextView) view.findViewById(R.id.thirdPercent);
         thirdButton = (FloatingActionButton) view.findViewById(R.id.thirdButton);
 
+        firstButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                Dialog dF = Dialog.newInstance((Profile) getArguments().getSerializable("data"), firstWeek.getText().toString().split(" ")[1], 0);
+                dF.show(fm, "fragment_dialog");
+            }
+        });
+
+        secondButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                Dialog dF = Dialog.newInstance((Profile) getArguments().getSerializable("data"), firstWeek.getText().toString().split(" ")[1], 1);
+                dF.show(fm, "fragment_dialog");
+            }
+        });
+
+        thirdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getFragmentManager();
+                Dialog dF = Dialog.newInstance((Profile) getArguments().getSerializable("data"), firstWeek.getText().toString().split(" ")[1], 2);
+                dF.show(fm, "fragment_dialog");
+            }
+        });
+
         setupUI();
 
         return view;
@@ -117,14 +147,23 @@ public class History extends Fragment implements View.OnClickListener {
             prog1 = data.getOverallProgress(week1);
             prog2 = data.getOverallProgress(week2);
             prog3 = data.getOverallProgress(week3);
+            firstButton.setEnabled(true);
+            secondButton.setEnabled(true);
+            thirdButton.setEnabled(true);
         } else if (weeks.size() == 2) {
             week1 = weeks.get(weeks.size() - 1);
             week2 = weeks.get(weeks.size() - 2);
             prog1 = data.getOverallProgress(week1);
             prog2 = data.getOverallProgress(week2);
+            firstButton.setEnabled(true);
+            secondButton.setEnabled(true);
+            thirdButton.setEnabled(false);
         } else if (weeks.size() <= 1) {
             week1 = weeks.get(weeks.size() - 1);
             prog1 = data.getOverallProgress(week1);
+            firstButton.setEnabled(true);
+            secondButton.setEnabled(false);
+            thirdButton.setEnabled(false);
         }
         // Set GUI
         firstWeek.setText("Week " + week1);
@@ -144,22 +183,6 @@ public class History extends Fragment implements View.OnClickListener {
         secondPercent.setTextSize(1, (int)p.getSettings().get("textSize"));
         thirdWeek.setTextSize(1, (int)p.getSettings().get("textSize"));
         thirdPercent.setTextSize(1, (int)p.getSettings().get("textSize"));
-    }
-
-    @Override
-    public void onClick(View view) {
-        // TODO: Create another view that shows progress bubbles for each category
-        // (runs, dif, speed, time)
-        switch (view.getId()) {
-            case (R.id.firstButton):
-                System.out.println("gothere1");
-                break;
-            case (R.id.secondButton):
-                System.out.println("gothere2");
-                break;
-            case (R.id.thirdButton):
-                System.out.println("gothere3");
-        }
     }
 
     public interface OnFragmentInteractionListener {

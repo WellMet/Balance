@@ -2,6 +2,7 @@ package com.example.ganoncannon.balance;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements
         Home.OnFragmentInteractionListener,
         Exercise.OnFragmentInteractionListener,
         History.OnFragmentInteractionListener,
-        Configs.OnFragmentInteractionListener {
+        Configs.OnFragmentInteractionListener,
+        Dialog.DialogListener {
 
     public Controller controller;
     public AudioManager audMgr;
@@ -138,4 +140,9 @@ public class MainActivity extends AppCompatActivity implements
                     break;
             }
         }
+
+    @Override
+    public void onDialogInteraction(Uri uri) {
+
+    }
 }
