@@ -198,6 +198,11 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
             lastTime = 0;
             seconds = 0;
             mListener.onFragmentInteraction(s);
+        } else {
+            HashMap s = new HashMap();
+            s.put("id", stopButton.getId());
+            s.put("state", "idle");
+            mListener.onFragmentInteraction(s);
         }
         progressBar.setProgress(0);
     }
@@ -276,14 +281,24 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
             }
             public void onFinish() {
                 // finished exercise
+                HashMap s = new HashMap();
+                HashMap data = new HashMap();
+                remainingTime = 0;
+                s.put("id", stopButton.getId());
+                s.put("state", "outro");
+                data.put("time", (int) ((double)((timer.getValue() * 60000) - remainingTime) / 1000));
+                data.put("difficulty", difToggle.isChecked() ? 2 : 1);
+                data.put("speed", speedSlider.getProgress());
+                s.put("data", data);
+                lastTime = 0;
+                seconds = 0;
+                mListener.onFragmentInteraction(s);
                 difToggle.setEnabled(true);
                 timer.setEnabled(true);
                 speedSlider.setEnabled(true);
                 startButton.setEnabled(true);
                 startBanner.setText("Start");
-                HashMap h = new HashMap();
-                h.put("id", startButton.getId());
-                h.put("state", "outro");
+                progressBar.setProgress(0);
                 remainingTime = 0;
                 lastTime = 0;
                 seconds = 0;

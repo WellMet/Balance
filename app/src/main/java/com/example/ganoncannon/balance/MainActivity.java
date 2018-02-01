@@ -36,23 +36,25 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    item.setChecked(true);
-                    loadFragment(new Home(), controller.getUser());
-                    break;
-                case R.id.navigation_exercise:
-                    item.setChecked(true);
-                    loadFragment(new Exercise(), controller.getUser());
-                    break;
-                case R.id.navigation_history:
-                    item.setChecked(true);
-                    loadFragment(new History(), controller.getUser());
-                    break;
-                case R.id.navigation_settings:
-                    item.setChecked(true);
-                    loadFragment(new Configs(), controller.getUser());
-                    break;
+            if (controller.getState().equals("idle")) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        item.setChecked(true);
+                        loadFragment(new Home(), controller.getUser());
+                        break;
+                    case R.id.navigation_exercise:
+                        item.setChecked(true);
+                        loadFragment(new Exercise(), controller.getUser());
+                        break;
+                    case R.id.navigation_history:
+                        item.setChecked(true);
+                        loadFragment(new History(), controller.getUser());
+                        break;
+                    case R.id.navigation_settings:
+                        item.setChecked(true);
+                        loadFragment(new Configs(), controller.getUser());
+                        break;
+                }
             }
             return false;
         }

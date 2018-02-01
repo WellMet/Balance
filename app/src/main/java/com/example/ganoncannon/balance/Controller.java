@@ -25,6 +25,7 @@ public class Controller {
         chosenDif = user.getGoals().get("difficulty");
         chosenSpeed = user.getGoals().get("speed");
         counter = chosenTime;
+        state = "idle";
     }
 
     public Profile getUser() {
@@ -67,6 +68,7 @@ public class Controller {
                 user.getData().getHistory().get(week).add(newEntry);
             }
             user.getData().writeData();
+            this.state = "idle";
         } else if (state.equals("stopped")) {
             String week = Integer.toString(Calendar.WEEK_OF_YEAR);
             if (user.getData().getHistory().get(week) != null) {
@@ -77,6 +79,7 @@ public class Controller {
                 user.getData().getHistory().get(week).add(h);
             }
             user.getData().writeData();
+            this.state = "idle";
         }
     }
 
