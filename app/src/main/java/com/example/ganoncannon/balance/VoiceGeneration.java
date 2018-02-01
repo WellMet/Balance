@@ -4,6 +4,8 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.media.MediaPlayer;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,29 +19,32 @@ import java.util.Random;
 
 public class VoiceGeneration implements TextToSpeech.OnInitListener {
     private HashMap settings;
-    private String intro;
+    private ArrayList<String> intro;
     private String outro;
     private ArrayList<String> commands;
+    private int commandIndex;
     private int chosenTime;
     private int chosenSpeed;
     private String state;
     private int chosenDif;
     private TextToSpeech tts;
-    private MediaPlayer mp;
     private Context context = null;
     public static final int COMMAND_DURATION = 4;
-    public static final String SCRIPTFILE = "script.wav";
+    public String SCRIPTFILE = "";
 
     public VoiceGeneration (HashMap settings) {
         this.settings = settings;
-        intro = "Ready in 3. 2. 1.";
-        outro = "... Great job!";
+        intro = new ArrayList<String>();
+        intro.add("3");
+        intro.add("2");
+        intro.add("1");
+        outro = "... Well Done!";
         state = "idle";
         chosenTime = 5 * 60;
         chosenSpeed = 5;
         chosenDif = 1;
         commands = new ArrayList<String>();
-        mp = new MediaPlayer();
+        commandIndex = 0;
     }
 
     public HashMap getSettings() {
@@ -50,11 +55,11 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
         this.settings = settings;
     }
 
-    public String getIntro() {
+    public ArrayList<String> getIntro() {
         return intro;
     }
 
-    public void setIntro(String intro) {
+    public void setIntro(ArrayList<String> intro) {
         this.intro = intro;
     }
 
@@ -84,6 +89,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
 
     public void setChosenSpeed(int chosenSpeed) {
         this.chosenSpeed = chosenSpeed;
+        tts.setSpeechRate((1 + ((float)(chosenSpeed - 5) / 10)));
     }
 
     public void setCommands(ArrayList<String> commands) {
@@ -93,7 +99,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
     public void generateOrdered() {
         // Function maps chosen speed (1 - 10) to a multiplier (0.5 - 1.5)
         commands.clear();
-        double speedMult = 1 + ((chosenSpeed - 5) / 10);
+        double speedMult = 1 + ((double)(chosenSpeed - 5) / 10);
         String[] directions = {"Left", "Right"};
         boolean directionIndex = false;
         int objectIndex = 0;
@@ -102,9 +108,12 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
         for (int i = objects.size() - 1; i >= 0; i--) {
             objects.add(objects.get(i));
         }
+        // New command duration:
+        int duration = COMMAND_DURATION + (int)(COMMAND_DURATION * ((double)(5 - chosenSpeed) / 10));
+        int numcommands = (int)((double)(chosenTime / duration)) + 10;
 
         // Generate the commands: direction + object 1,2,3,3,2,1; other_direction + object 1,2,3,3,2,1
-        for(int i = 0; i < (int)((chosenTime * speedMult) / (COMMAND_DURATION)); i++) {
+        for(int i = 0; i < numcommands; i++) {
             commands.add(directions[directionIndex ? 1 : 0] + " foot, " + objects.get(objectIndex));
             if (objectIndex == objects.size() - 1) {
                 objectIndex = 0;
@@ -117,14 +126,18 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
 
     public void generateRandom() {
         commands.clear();
-        double speedMult = 1 + ((chosenSpeed - 5) / 10);
+        double speedMult = 1 + ((double)(chosenSpeed - 5) / 10);
         String[] directions = {"Left", "Right"};
         ArrayList<String> objects = (ArrayList<String>) settings.get("objects");
         Random r1 = new Random();
         Random r2 = new Random();
         int objectIndex;
         int directionIndex;
-        for(int i = 0; i < (int)((chosenTime * speedMult) / (COMMAND_DURATION)); i++) {
+        // New command duration:
+        int duration = COMMAND_DURATION + (int)(COMMAND_DURATION * ((double)(5 - chosenSpeed) / 10));
+        int numcommands = (int)((double)(chosenTime / duration)) + 10;
+
+        for(int i = 0; i < numcommands; i++) {
             objectIndex = r1.nextInt(objects.size());
             directionIndex = r2.nextInt(2);
             commands.add(directions[directionIndex] + " foot, " + objects.get(objectIndex));
@@ -132,27 +145,19 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
     }
 
     public void speak() {
-        // TODO: add silence utterances between 3.2.1
-        float speedMult = 1 + ((chosenSpeed - 5) / 10);
-        speedMult = (float) 0.7 * speedMult;
         if (tts != null) {
             tts.stop();
         }
         if (state.equals("intro")) {
+            System.out.println("command index: " + commandIndex);
             System.out.println("activated intro");
-            tts.setSpeechRate(speedMult);
-            tts.speak(intro, TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(intro.get(commandIndex), TextToSpeech.QUEUE_ADD, null);
         } else if (state.equals("commands")) {
-            System.out.println("activated outro");
-            setupCommands();
+            System.out.println("activated commands");
+            tts.speak(commands.get(commandIndex), TextToSpeech.QUEUE_ADD, null);
         } else if (state.equals("outro")) {
             System.out.println("activated outro");
-            tts.setSpeechRate(speedMult);
-            tts.speak(outro, TextToSpeech.QUEUE_FLUSH, null);
-        } else if (state.equals("paused")) {
-            mp.pause();
-        } else if (state.equals("resume")) {
-            mp.start();
+            tts.speak(outro, TextToSpeech.QUEUE_ADD, null);
         }
     }
 
@@ -176,6 +181,18 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
     }
 
     public void setState(String state) {
+        if (this.state.equals("commands") && state.equals("commands"))
+            commandIndex++;
+        else if(!this.state.equals("commands") && state.equals("commands")) {
+            if (chosenDif == 1)
+                generateOrdered();
+            else if (chosenDif == 2)
+                generateRandom();
+            commandIndex = 0;
+        } else if (this.state.equals("intro") && state.equals("intro")) {
+            commandIndex++;
+        } else if (!this.state.equals("intro") && state.equals("intro"))
+            commandIndex = 0;
         this.state = state;
     }
 
@@ -201,37 +218,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
 
     public void setContext(Context context) {
         this.context = context;
+        SCRIPTFILE = context.getFilesDir().getPath()+ "script.wav";
         tts = new TextToSpeech(context, this);
-    }
-
-    public void setupCommands() {
-        // Build the script string
-        if (chosenDif == 1) {
-            generateOrdered();
-        } else if (chosenDif == 2) {
-            generateRandom();
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < commands.size() - 1; i++) {
-            sb.append(commands.get(i));
-            sb.append(", ");
-        }
-
-        // Generate the tts to file and start the audio
-        tts.synthesizeToFile(sb.toString(), null, SCRIPTFILE);
-        tts.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
-            @Override
-            public void onUtteranceCompleted(String utteranceId) {
-                if (state.equals("commands")) {
-                    try {
-                        mp.setDataSource(SCRIPTFILE);
-                        mp.prepare();
-                        mp.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
 }

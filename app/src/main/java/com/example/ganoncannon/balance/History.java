@@ -126,13 +126,13 @@ public class History extends Fragment implements View.OnClickListener {
             prog1 = data.getOverallProgress(week1);
         }
         // Set GUI
-        firstWeek.setText(week1);
+        firstWeek.setText("Week " + week1);
         firstPercent.setText(Integer.toString(prog1));
         firstProgress.setProgress(prog1);
-        secondWeek.setText(week2);
+        secondWeek.setText("Week " + week2);
         secondPercent.setText(Integer.toString(prog2));
         secondProgress.setProgress(prog2);
-        thirdWeek.setText(week3);
+        thirdWeek.setText("Week " + week3);
         thirdPercent.setText(Integer.toString(prog3));
         thirdProgress.setProgress(prog3);
     }

@@ -53,10 +53,11 @@
         <SeekBar
             android:id="@+id/speedSlider"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
-            android:layout_width="367dp"
-            android:layout_height="35dp"
+            android:layout_width="345dp"
+            android:layout_height="37dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:max="10"
             android:maxHeight="5dp"
@@ -64,10 +65,9 @@
             android:progress="5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/exerciseProgress"
-            app:layout_constraintVertical_bias="0.157" />
+            app:layout_constraintVertical_bias="0.166" />
 
         <TextView
             android:id="@+id/difBanner"
@@ -122,6 +122,7 @@
             android:layout_width="127dp"
             android:layout_height="46dp"
             android:layout_marginEnd="36dp"
+            android:layout_marginRight="36dp"
             android:layout_marginTop="8dp"
             android:textOff="Normal"
             android:textOn="Random"
@@ -140,6 +141,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/difBanner" />
+
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="STOP"
+            android:textSize="14pt"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/startButton"
+            app:layout_constraintEnd_toStartOf="@+id/startButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/startButton" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

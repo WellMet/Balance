@@ -127,6 +127,7 @@ public class Home extends Fragment implements View.OnClickListener {
         if (weeks.size() > 0) {
             Collections.sort(weeks);
             progress.setProgress(data.getOverallProgress(weeks.get(weeks.size() - 1)));
+            banner.setText("Week " + weeks.get(weeks.size() - 1));
         } else {
             progress.setProgress(0);
         }

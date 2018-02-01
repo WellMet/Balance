@@ -53,13 +53,15 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller();
+        controller = new Controller(this.getApplicationContext().getFilesDir().getPath());
         controller.getUser().getVoice().setContext(this.getApplicationContext());
         setContentView(R.layout.activity_main);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
     }
+
+
 
     protected void loadFragment(Fragment fragment, Serializable data) {
         if (fragment == null)
@@ -91,13 +93,16 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 // Exercise Screen Data Links
                 case R.id.timer:
-                    controller.setChosenTime((int)h.get("value"));
+                    controller.setChosenTime((int)h.get("value") * 60);
                     break;
                 case R.id.startButton:
-                    controller.setState((String)h.get("state"));
+                    controller.setState((String)h.get("state"), null);
+                    break;
+                case R.id.stopButton:
+                    controller.setState((String)h.get("state"), (HashMap)h.get("data"));
                     break;
                 case R.id.difToggle:
-                    controller.setChosenDif((boolean)(h.get("value")) ? 1 : 0);
+                    controller.setChosenDif((boolean)(h.get("value")) ? 2 : 1);
                     break;
                 case R.id.speedSlider:
                     controller.setChosenSpeed((int)h.get("value"));

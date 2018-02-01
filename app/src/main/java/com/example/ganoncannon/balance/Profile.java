@@ -1,5 +1,7 @@
 package com.example.ganoncannon.balance;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,7 @@ public class Profile {
     public static final double DIF_WEIGHT = 0.10;
 
 
-    public Profile(Controller cont) {
+    public Profile(Controller cont, String context) {
         if (!loadSettings()) {
             settings = new HashMap();
             settings.put("textSize", 14);
@@ -38,7 +40,7 @@ public class Profile {
         goals.put("difficulty", 1);
         goals.put("speed", 5);
         goals.put("time", 300);
-        data = new Data(goals);
+        data = new Data(goals, context);
     }
 
     public boolean loadSettings() {

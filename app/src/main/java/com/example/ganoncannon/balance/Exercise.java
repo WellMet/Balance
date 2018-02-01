@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.ProgressBar;
@@ -32,10 +33,12 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     private ToggleButton difToggle;
     private NumberPicker timer;
     private FloatingActionButton startButton;
+    private Button stopButton;
     private ProgressBar progressBar;
     private SeekBar speedSlider;
-
-    private Timer countDownTimer;
+    private CountDownTimer countDownTimer;
+    private int remainingTime;
+    private int lastTime;
     private int seconds;
     View view;
 
@@ -71,14 +74,21 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         timer = (NumberPicker) view.findViewById(R.id.timer);
         startButton = (FloatingActionButton) view.findViewById(R.id.startButton);
         startBanner = (TextView) view.findViewById(R.id.startBanner);
+        stopButton = (Button) view.findViewById(R.id.stopButton);
         progressBar = (ProgressBar) view.findViewById(R.id.exerciseProgress);
         speedBanner = (TextView) view.findViewById(R.id.speedBanner);
         speedSlider = (SeekBar) view.findViewById(R.id.speedSlider);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickStop();
+            }
+        });
 
         // Initialize GUI
         setupUI();
-
-        countDownTimer = new Timer();
+        remainingTime = 0;
+        lastTime = 0;
         seconds = 0;
 
         difToggle.setOnCheckedChangeListener(this);
@@ -116,43 +126,79 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
 
     @Override
     public void onClick(View view) {
-        // User clicked the Start/Stop toggle button.  Check timer value and adjust behavior
-        //if (time > 0) && startBanner.getText().equals("Start"), startBanner.setText("Stop") etc...
-        String state = "";
-        HashMap h = new HashMap();
-        h.put("id", startButton.getId());
-        if (startBanner.getText().equals("Start")) {
-            // begin countdown sequence
-            h.put("state", "intro");
-            mListener.onFragmentInteraction(h);
-            difToggle.setEnabled(false);
-            timer.setEnabled(false);
-            speedSlider.setEnabled(false);
-            startButton.setEnabled(false);
-            seconds = 3;
-            new CountDownTimer(3100, 1000) {
-                public void onTick(long millisUntilFinished) {
-                    System.out.println("ms remaining: " + millisUntilFinished);
-                    startBanner.setText(Integer.toString(seconds));
-                    seconds--;
-                }
-                public void onFinish() {
-                    // Begin exercise sequence
-                    HashMap h = new HashMap();
-                    System.out.println("done");
-                    seconds = timer.getValue() * 60;
+        switch(view.getId()) {
+            case R.id.startButton:
+                String state = "";
+                HashMap h = new HashMap();
+                h.put("id", startButton.getId());
+                if (startBanner.getText().equals("Start")) {
+                    // begin countdown sequence
+                    difToggle.setEnabled(false);
+                    timer.setEnabled(false);
+                    speedSlider.setEnabled(false);
+                    startButton.setEnabled(false);
+                    seconds = 3;
+                    new CountDownTimer(4000, 1200) {
+                        HashMap h = new HashMap();
+                        public void onTick(long millisUntilFinished) {
+                            startBanner.setText(Integer.toString(seconds));
+                            seconds--;
+                            h.put("id", startButton.getId());
+                            h.put("state", "intro");
+                            mListener.onFragmentInteraction(h);
+                        }
+
+                        public void onFinish() {
+                            // Begin exercise sequence
+                            startBanner.setText("Pause");
+                            startButton.setEnabled(true);
+                            h.put("id", startButton.getId());
+                            h.put("state", "commands");
+                            mListener.onFragmentInteraction(h);
+                            lastTime = timer.getValue() * 60000;
+                            exerciseSequence(lastTime);
+                        }
+                    }.start();
+                } else if (startBanner.getText().equals("Pause")) {
+                    h.put("state", "paused");
+                    startBanner.setText("Resume");
+                    stopButton.setEnabled(true);
+                    stopButton.setVisibility(View.VISIBLE);
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
+                } else if (startBanner.getText().equals("Resume")) {
+                    // Resume exercise sequence
                     startBanner.setText("Pause");
-                    h.put("id", startButton.getId());
-                    h.put("state", "commands");
-                    mListener.onFragmentInteraction(h);
+                    exerciseSequence(remainingTime);
                 }
-            }.start();
-        } else if (startBanner.getText().equals("Pause")) {
-            // Some how pause tts from here
-            h.put("state", "paused");
-            System.out.println("pausing");
-            startBanner.setText("Resume");
+                break;
         }
+    }
+
+    public void onClickStop() {
+        difToggle.setEnabled(true);
+        timer.setEnabled(true);
+        speedSlider.setEnabled(true);
+        startButton.setEnabled(true);
+        startBanner.setText("Start");
+        stopButton.setEnabled(false);
+        stopButton.setVisibility(View.INVISIBLE);
+        if (progressBar.getProgress() > 24) {
+            HashMap s = new HashMap();
+            HashMap data = new HashMap();
+            s.put("id", stopButton.getId());
+            s.put("state", "stopped");
+            data.put("time", (int) ((double)((timer.getValue() * 60000) - remainingTime) / 1000));
+            data.put("difficulty", difToggle.isChecked() ? 2 : 1);
+            data.put("speed", speedSlider.getProgress());
+            s.put("data", data);
+            remainingTime = 0;
+            lastTime = 0;
+            seconds = 0;
+            mListener.onFragmentInteraction(s);
+        }
+        progressBar.setProgress(0);
     }
 
     @Override
@@ -198,8 +244,42 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         timer.setValue(goals.get("time") / 60);
         startBanner.setText(R.string.start);
         progressBar.setProgress(0);
-        progressBar.setMax(timer.getValue()*60); // Progress bar tracks seconds
+        progressBar.setMax(100); // Progress bar tracks seconds
         speedSlider.setMax(10);
         speedSlider.setProgress(goals.get("speed"));
+    }
+
+    public void exerciseSequence(int mill) {
+        countDownTimer = new CountDownTimer(mill, 1000) {
+            HashMap h = new HashMap();
+            int fullTime = timer.getValue() * 60000;
+            double voiceSteps = (int)(4000 + 4000 * ((5 - (double)(speedSlider.getProgress())) / 10));
+            double progress = 0;
+            public void onTick(long millisUntilFinished) {
+                progress = (((double) millisUntilFinished - (double) fullTime) / fullTime) * (-100);
+                remainingTime = (int) millisUntilFinished;
+                progressBar.setProgress((int)progress);
+                if (lastTime - millisUntilFinished >= voiceSteps) {
+                    h.put("id", startButton.getId());
+                    h.put("state", "commands");
+                    mListener.onFragmentInteraction(h);
+                    lastTime = (int) millisUntilFinished;
+                }
+            }
+            public void onFinish() {
+                // finished exercise
+                difToggle.setEnabled(true);
+                timer.setEnabled(true);
+                speedSlider.setEnabled(true);
+                startButton.setEnabled(true);
+                startBanner.setText("Start");
+                HashMap h = new HashMap();
+                h.put("id", startButton.getId());
+                h.put("state", "outro");
+                remainingTime = 0;
+                lastTime = 0;
+                seconds = 0;
+            }
+        }.start();
     }
 }

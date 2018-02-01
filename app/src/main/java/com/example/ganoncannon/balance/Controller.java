@@ -1,5 +1,12 @@
 package com.example.ganoncannon.balance;
 
+import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+
 /**
  * Created by ganoncannon on 11/30/17.
  */
@@ -12,8 +19,8 @@ public class Controller {
     private int chosenSpeed;
     private int chosenTime;
 
-    public Controller() {
-        user = new Profile(this);
+    public Controller(String context) {
+        user = new Profile(this, context);
         chosenTime = user.getGoals().get("time");
         chosenDif = user.getGoals().get("difficulty");
         chosenSpeed = user.getGoals().get("speed");
@@ -40,11 +47,37 @@ public class Controller {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(String state, HashMap h) {
         this.state = state;
         user.getVoice().setState(state);
         if (state.equals("intro") || state.equals("outro") || state.equals("commands") || state.equals("paused"))
             user.getVoice().speak();
+        if (state.equals("outro")) {
+            // Finished the exercise either by stopping or finishing, create a data entry
+            HashMap newEntry = new HashMap();
+            newEntry.put("speed", chosenSpeed);
+            newEntry.put("difficulty", chosenDif);
+            newEntry.put("time", chosenTime);
+            String week = Integer.toString(Calendar.WEEK_OF_YEAR);
+            if (user.getData().getHistory().get(week) != null) {
+                user.getData().getHistory().get(week).add(newEntry);
+            } else {
+                ArrayList init_runs = new ArrayList<HashMap<String, Integer>>();
+                init_runs.add(newEntry);
+                user.getData().getHistory().get(week).add(newEntry);
+            }
+            user.getData().writeData();
+        } else if (state.equals("stopped")) {
+            String week = Integer.toString(Calendar.WEEK_OF_YEAR);
+            if (user.getData().getHistory().get(week) != null) {
+                user.getData().getHistory().get(week).add(h);
+            } else {
+                ArrayList init_runs = new ArrayList<HashMap<String, Integer>>();
+                init_runs.add(h);
+                user.getData().getHistory().get(week).add(h);
+            }
+            user.getData().writeData();
+        }
     }
 
     public int getChosenDif() {
@@ -63,6 +96,7 @@ public class Controller {
     public void setChosenSpeed(int chosenSpeed) {
         this.chosenSpeed = chosenSpeed;
         user.getVoice().setChosenSpeed(chosenSpeed);
+        System.out.println("chosenSpeed: " + chosenSpeed);
     }
 
     public int getChosenTime() {
