@@ -1,10 +1,7 @@
 package com.example.ganoncannon.balance;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -97,9 +94,10 @@ public class Controller {
     }
 
     public void setChosenSpeed(int chosenSpeed) {
+        if (chosenSpeed > 10)
+            chosenSpeed = 10;
         this.chosenSpeed = chosenSpeed;
         user.getVoice().setChosenSpeed(chosenSpeed);
-        System.out.println("chosenSpeed: " + chosenSpeed);
     }
 
     public int getChosenTime() {
@@ -107,6 +105,8 @@ public class Controller {
     }
 
     public void setChosenTime(int chosenTime) {
+        if (chosenTime > 900)
+            chosenTime = 900;
         this.chosenTime = chosenTime;
         user.getVoice().setChosenTime(chosenTime);
     }

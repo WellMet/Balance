@@ -2,12 +2,7 @@ package com.example.ganoncannon.balance;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
-import android.media.MediaPlayer;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -89,7 +84,11 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
 
     public void setChosenSpeed(int chosenSpeed) {
         this.chosenSpeed = chosenSpeed;
-        tts.setSpeechRate((1 + ((float)(chosenSpeed - 5) / 10)));
+        try {
+            tts.setSpeechRate((1 + ((float) (chosenSpeed - 5) / 10)));
+        } catch (Exception err) {
+
+        }
     }
 
     public void setCommands(ArrayList<String> commands) {

@@ -55,10 +55,8 @@ public class Data implements Serializable{
             System.out.println("write success");
             return true;
         } catch (IOException err){
-            err.printStackTrace();
             return false;
         } catch (ClassNotFoundException cErr) {
-            cErr.printStackTrace();
             return false;
         }
     }
@@ -82,10 +80,12 @@ public class Data implements Serializable{
      */
     public int getOverallProgress(String week) {
         // Sum the weighted average of all the categories
-        return (int) ((getProgressScore(week, "speed") * Profile.SPEED_WEIGHT)
-                + (getProgressScore(week, "difficulty") * Profile.DIF_WEIGHT)
-                + (getProgressScore(week, "time") * Profile.TIME_WEIGHT)
-                + (getProgressScore(week, "attempts") * Profile.RUN_WEIGHT));
+        int speedScore = getProgressScore(week, "speed");
+        int difScore = getProgressScore(week, "difficulty");
+        int timeScore = getProgressScore(week, "time");
+        int attemptScore = getProgressScore(week, "attempts");
+
+        return (int) (speedScore + difScore + timeScore + attemptScore);
     }
 
     public int getNumAttempts(String week) {
@@ -93,13 +93,13 @@ public class Data implements Serializable{
     }
 
     public double getAverageOf(String week, String of) {
-        int sum = 0;
+        double sum = 0;
 
         if (history.get(week).size() > 0) {
             for (int i = 0; i < history.get(week).size(); i++) {
                 sum += history.get(week).get(i).get(of);
             }
-            return sum / history.get(week).size();
+            return sum / (double)history.get(week).size();
         }
         else {
             return 0;
@@ -110,7 +110,7 @@ public class Data implements Serializable{
         ArrayList<HashMap<String, Integer>> attempts = history.get(week);
         double score = 0;
         if (of.equals("attempts")) {
-            score = attempts.size() / goals.get("attempts");
+            score = (double)attempts.size() / goals.get("attempts");
             return (int) ((score * Profile.RUN_WEIGHT) * 100);
         } else if (of.equals("speed")){
             score = getAverageOf(week, of) / goals.get("speed");

@@ -61,7 +61,7 @@ public class Profile implements Serializable{
             ostream.writeObject(settings);
             ostream.close();
             fstream.close();
-            System.out.println("write settings success");
+            //System.out.println("write settings success");
         } catch (IOException err) {
             err.printStackTrace();
         }
@@ -74,13 +74,11 @@ public class Profile implements Serializable{
             settings = (HashMap) ostream.readObject();
             ostream.close();
             istream.close();
-            System.out.println("read settings success");
+            //System.out.println("read settings success");
             return true;
         } catch (IOException err){
-            err.printStackTrace();
             return false;
         } catch (ClassNotFoundException cErr) {
-            cErr.printStackTrace();
             return false;
         }
     }
@@ -127,7 +125,10 @@ public class Profile implements Serializable{
 
     public void setFontSize(int size) {
         // Convert from seekbar to dp
-        settings.put("textSize", size + 15);
+        if (size > 20)
+            settings.put("textSize", 20 + 15);
+        else
+            settings.put("textSize", size + 15);
         writeSettings();
     }
 
@@ -141,7 +142,10 @@ public class Profile implements Serializable{
     }
 
     public void setVolume(int v) {
-        settings.put("volume", v);
+        if (v > (int)settings.get("maxVolume"))
+            settings.put("volume", (int) settings.get("maxVolume"));
+        else
+            settings.put("volume", v);
         writeSettings();
     }
 
