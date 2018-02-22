@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
                     mOnNavigationItemSelectedListener.onNavigationItemSelected((MenuItem)h.get("menu"));
                     break;
                 // Exercise Screen Data Links
-                case R.id.timer:
+                case R.id.minute:
                     controller.setChosenTime((int)h.get("value") * 60);
                     break;
                 case R.id.startButton:

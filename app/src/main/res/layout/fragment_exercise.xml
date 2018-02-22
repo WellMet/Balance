@@ -149,25 +149,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/startButton" />
 
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="308dp"
-            android:layout_height="62dp"
+        <NumberPicker
+            android:id="@+id/minute"
+            android:layout_width="90dp"
+            android:layout_height="115dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:ems="10"
-            android:gravity="center_horizontal"
-            android:inputType="time"
-            android:text="14  :  50"
-            android:textColor="@color/colorAccent"
-            android:textSize="35dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/exerciseProgress"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:theme="@style/NumberPickerText"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintEnd_toStartOf="@+id/sep"
+            app:layout_constraintHorizontal_bias="0.906"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/difToggle" />
+            app:layout_constraintTop_toBottomOf="@+id/difBanner"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <NumberPicker
+            android:id="@+id/second"
+            android:layout_width="90dp"
+            android:layout_height="115dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginRight="68dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/NumberPickerText"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/difToggle"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/sep"
+            android:layout_width="20dp"
+            android:layout_height="115dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text=":"
+            android:textColor="@color/colorAccent"
+            android:textSize="45dp"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintEnd_toStartOf="@+id/second"
+            app:layout_constraintTop_toBottomOf="@+id/difToggle"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

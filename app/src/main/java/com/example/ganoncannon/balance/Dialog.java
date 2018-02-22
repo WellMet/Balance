@@ -29,6 +29,9 @@ public class Dialog extends DialogFragment {
     private TextView fullPercent;
     private TextView fullWeek;
 
+    private TextView col1;
+    private TextView col2;
+
     private TextView speedBanner;
     private ProgressBar speedBar;
     private TextView attemptsBanner;
@@ -78,6 +81,8 @@ public class Dialog extends DialogFragment {
         fullProgress = (ProgressBar) view.findViewById(R.id.firstProgress2);
         fullPercent = (TextView) view.findViewById(R.id.firstPercent2);
         fullWeek = (TextView) view.findViewById(R.id.firstWeek2);
+        col1 = (TextView) view.findViewById(R.id.col1);
+        col2 = (TextView) view.findViewById(R.id.col2);
         speedBanner = (TextView) view.findViewById(R.id.spweedBanner);
         speedBar = (ProgressBar) view.findViewById(R.id.spweedBar);
         diffBanner = (TextView) view.findViewById(R.id.diffBanner);
@@ -136,6 +141,11 @@ public class Dialog extends DialogFragment {
         fullPercent.setText(Integer.toString(data.getOverallProgress(week)));
         fullWeek.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
         fullWeek.setTextColor(getResources().getColor(colorId));
+
+        col1.setTextColor(getResources().getColor(colorId));
+        col1.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
+        col2.setTextColor(getResources().getColor(colorId));
+        col2.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
 
         attemptsBanner.setTextSize(1, (int)p.getSettings().get("textSize") - 5);
         progressDrawable = attemptsBar.getProgressDrawable().mutate();

@@ -31,7 +31,8 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     private TextView speedBanner;
     private TextView startBanner;
     private ToggleButton difToggle;
-    private NumberPicker timer;
+    private NumberPicker minute;
+    private NumberPicker second;
     private FloatingActionButton startButton;
     private Button stopButton;
     private ProgressBar progressBar;
@@ -40,6 +41,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     private int remainingTime;
     private int lastTime;
     private int seconds;
+    private boolean running = false;
     View view;
 
     public Exercise() {
@@ -72,7 +74,8 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         // Init UI
         difBanner = (TextView) view.findViewById(R.id.difBanner);
         difToggle = (ToggleButton) view.findViewById(R.id.difToggle);
-        timer = (NumberPicker) view.findViewById(R.id.timer);
+        minute = (NumberPicker) view.findViewById(R.id.minute);
+        second = (NumberPicker) view.findViewById(R.id.second);
         startButton = (FloatingActionButton) view.findViewById(R.id.startButton);
         startBanner = (TextView) view.findViewById(R.id.startBanner);
         stopButton = (Button) view.findViewById(R.id.stopButton);
@@ -94,7 +97,18 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
 
         difToggle.setOnCheckedChangeListener(this);
         startButton.setOnClickListener(this);
-        timer.setOnValueChangedListener(this);
+        minute.setOnValueChangedListener(this);
+        second.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                if (!running) {
+                    HashMap h = new HashMap();
+                    h.put("id", minute.getId());
+                    h.put("value", i1 + (minute.getValue() * 60));
+                    mListener.onFragmentInteraction(h);
+                }
+            }
+        });
         speedSlider.setOnSeekBarChangeListener(this);
 
         return view;
@@ -135,7 +149,8 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 if (startBanner.getText().equals("Start")) {
                     // begin countdown sequence
                     difToggle.setEnabled(false);
-                    timer.setEnabled(false);
+                    minute.setEnabled(false);
+                    second.setEnabled(false);
                     speedSlider.setEnabled(false);
                     startButton.setEnabled(false);
                     seconds = 3;
@@ -153,10 +168,11 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                             // Begin exercise sequence
                             startBanner.setText("Pause");
                             startButton.setEnabled(true);
+                            running = true;
                             h.put("id", startButton.getId());
                             h.put("state", "commands");
                             mListener.onFragmentInteraction(h);
-                            lastTime = timer.getValue() * 60000;
+                            lastTime = (minute.getValue() * 60000) + (second.getValue() * 1000);
                             exerciseSequence(lastTime);
                         }
                     }.start();
@@ -178,8 +194,10 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     }
 
     public void onClickStop() {
+        running = false;
         difToggle.setEnabled(true);
-        timer.setEnabled(true);
+        minute.setEnabled(true);
+        second.setEnabled(true);
         speedSlider.setEnabled(true);
         startButton.setEnabled(true);
         startBanner.setText("Start");
@@ -190,7 +208,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
             HashMap data = new HashMap();
             s.put("id", stopButton.getId());
             s.put("state", "stopped");
-            data.put("time", (int) ((double)((timer.getValue() * 60000) - remainingTime) / 1000));
+            data.put("time", (int) ((double)((minute.getValue() * 60000) - remainingTime) / 1000));
             data.put("difficulty", difToggle.isChecked() ? 2 : 1);
             data.put("speed", speedSlider.getProgress());
             s.put("data", data);
@@ -209,10 +227,17 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
 
     @Override
     public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
-        HashMap h = new HashMap();
-        h.put("id", numberPicker.getId());
-        h.put("value", newVal);
-        mListener.onFragmentInteraction(h);
+        if (!running) {
+            HashMap h = new HashMap();
+            h.put("id", numberPicker.getId());
+            h.put("value", newVal);
+            if (newVal == 15) {
+                second.setMaxValue(0);
+            } else {
+                second.setMaxValue(59);
+            }
+            mListener.onFragmentInteraction(h);
+        }
     }
 
     @Override
@@ -245,9 +270,14 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         else if (goals.get("difficulty") == 2) {
             difToggle.setChecked(true);
         }
-        timer.setMaxValue(15);
-        timer.setMinValue(5);
-        timer.setValue(goals.get("time") / 60);
+        int sec = goals.get("time") % 60;
+        int min = (goals.get("time") - sec) / 60;
+        minute.setMaxValue(15);
+        minute.setMinValue(5);
+        minute.setValue(min);
+        second.setMaxValue(59);
+        second.setMinValue(0);
+        second.setValue(sec);
         startBanner.setText(R.string.start);
         progressBar.setProgress(0);
         progressBar.setMax(100); // Progress bar tracks seconds
@@ -265,13 +295,18 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     public void exerciseSequence(int mill) {
         countDownTimer = new CountDownTimer(mill, 1000) {
             HashMap h = new HashMap();
-            int fullTime = timer.getValue() * 60000;
+            int fullTime = minute.getValue() * 60000;
             double voiceSteps = (int)(4000 + 4000 * ((5 - (double)(speedSlider.getProgress())) / 10));
             double progress = 0;
             public void onTick(long millisUntilFinished) {
                 progress = (((double) millisUntilFinished - (double) fullTime) / fullTime) * (-100);
                 remainingTime = (int) millisUntilFinished;
                 progressBar.setProgress((int)progress);
+                int secondsUntil = (int) millisUntilFinished / 1000;
+                int sec = secondsUntil % 60;
+                int min = (secondsUntil - sec) / 60;
+                minute.setValue(min);
+                second.setValue(sec);
                 if (lastTime - millisUntilFinished >= voiceSteps) {
                     h.put("id", startButton.getId());
                     h.put("state", "commands");
@@ -284,9 +319,10 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 HashMap s = new HashMap();
                 HashMap data = new HashMap();
                 remainingTime = 0;
+                running = false;
                 s.put("id", stopButton.getId());
                 s.put("state", "outro");
-                data.put("time", (int) ((double)((timer.getValue() * 60000) - remainingTime) / 1000));
+                data.put("time", (int) ((double)((minute.getValue() * 60000) - remainingTime) / 1000));
                 data.put("difficulty", difToggle.isChecked() ? 2 : 1);
                 data.put("speed", speedSlider.getProgress());
                 s.put("data", data);
@@ -294,7 +330,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 seconds = 0;
                 mListener.onFragmentInteraction(s);
                 difToggle.setEnabled(true);
-                timer.setEnabled(true);
+                minute.setEnabled(true);
                 speedSlider.setEnabled(true);
                 startButton.setEnabled(true);
                 startBanner.setText("Start");

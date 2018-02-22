@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class Profile implements Serializable{
     private Data data;
-    private VoiceGeneration voice;
+    private transient VoiceGeneration voice;
     private Controller controller;
     private HashMap<String, Integer> goals;
     private HashMap settings;

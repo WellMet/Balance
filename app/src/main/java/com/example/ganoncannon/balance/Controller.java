@@ -1,5 +1,6 @@
 package com.example.ganoncannon.balance;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.HashMap;
  * Created by ganoncannon on 11/30/17.
  */
 
-public class Controller {
+public class Controller implements Serializable{
     private Profile user;
     private int counter;
     private String state;
