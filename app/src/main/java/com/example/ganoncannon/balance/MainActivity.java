@@ -3,14 +3,19 @@ package com.example.ganoncannon.balance;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.provider.Settings;
 import android.widget.EditText;
@@ -24,12 +29,18 @@ public class MainActivity extends AppCompatActivity implements
         Exercise.OnFragmentInteractionListener,
         History.OnFragmentInteractionListener,
         Configs.OnFragmentInteractionListener,
-        Dialog.DialogListener {
+        Help.OnFragmentInteractionListener,
+        Dialog.DialogListener, GestureDetector.OnGestureListener {
 
     public Controller controller;
     public AudioManager audMgr;
     public int originalVolume;
     public int originalBrightness;
+    public int curFrag = 0;
+    GestureDetector gestureDetector;
+
+    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -41,18 +52,22 @@ public class MainActivity extends AppCompatActivity implements
                     case R.id.navigation_home:
                         item.setChecked(true);
                         loadFragment(new Home(), controller.getUser());
+                        curFrag = 0;
                         break;
                     case R.id.navigation_exercise:
                         item.setChecked(true);
                         loadFragment(new Exercise(), controller.getUser());
+                        curFrag = 1;
                         break;
                     case R.id.navigation_history:
                         item.setChecked(true);
                         loadFragment(new History(), controller.getUser());
+                        curFrag = 2;
                         break;
                     case R.id.navigation_settings:
                         item.setChecked(true);
                         loadFragment(new Configs(), controller.getUser());
+                        curFrag = 3;
                         break;
                 }
             }
@@ -79,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_home);
+
+        gestureDetector = new GestureDetector(this);
+
     }
 
 
@@ -113,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements
                     break;
                 // Exercise Screen Data Links
                 case R.id.minute:
-                    controller.setChosenTime((int)h.get("value") * 60);
+                    controller.setChosenTime((int)h.get("value"));
                     break;
                 case R.id.startButton:
                     controller.setState((String)h.get("state"), null);
@@ -144,7 +162,84 @@ public class MainActivity extends AppCompatActivity implements
         }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    @Override
     public void onDialogInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        System.out.println("lul");
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        boolean result = false;
+        try {
+            float diffY = e2.getY() - e1.getY();
+            float diffX = e2.getX() - e1.getX();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        // Swipe Right
+                        switch(curFrag){
+                            case 0:
+                                loadFragment(new Home(), controller.getUser());
+                                break;
+                            case 1:
+                                loadFragment(new Exercise(), controller.getUser());
+                                break;
+                            case 2:
+                                loadFragment(new History(), controller.getUser());
+                                break;
+                            case 3:
+                                loadFragment(new Configs(), controller.getUser());
+                                break;
+                        }
+
+                    } else {
+                        // Swipe Left
+                        loadFragment(new Help(), null);
+                    }
+                    result = true;
+                }
+            }
+            else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffY > 0) {
+                    // Swipe bottom
+                } else {
+                    // Swipe top
+                }
+                result = true;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 }

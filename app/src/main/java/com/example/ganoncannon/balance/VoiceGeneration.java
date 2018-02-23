@@ -33,7 +33,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
         intro.add("3");
         intro.add("2");
         intro.add("1");
-        outro = "... Well Done!";
+        outro = " Well Done!";
         state = "idle";
         chosenTime = 5 * 60;
         chosenSpeed = 5;
@@ -164,6 +164,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             int result = tts.setLanguage(Locale.US);
+            tts.setPitch(0.85f);
             if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 System.out.println("TTS: This Language is not supported");

@@ -31,6 +31,7 @@ public class Configs extends Fragment {
     private EditText obj3Edit;
     private TextView volumeBanner;
     private SeekBar volumeBar;
+    private boolean loading = true;
 
     public View view;
 
@@ -77,14 +78,16 @@ public class Configs extends Fragment {
 
         obj1Edit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                HashMap h = new HashMap();
-                if (obj1Edit.getText().toString().equals(""))
-                    h.put("object", obj1Edit.getHint().toString());
-                else
-                    h.put("object", obj1Edit.getText().toString());
-                h.put("index", 0);
-                h.put("id", objBanner.getId());
-                mListener.onFragmentInteraction(h);
+                if (!loading) {
+                    HashMap h = new HashMap();
+                    if (obj1Edit.getText().toString().equals(""))
+                        h.put("object", obj1Edit.getHint().toString());
+                    else
+                        h.put("object", obj1Edit.getText().toString());
+                    h.put("index", 0);
+                    h.put("id", objBanner.getId());
+                    mListener.onFragmentInteraction(h);
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -93,14 +96,16 @@ public class Configs extends Fragment {
 
         obj2Edit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                HashMap h = new HashMap();
-                if (obj2Edit.getText().toString().equals(""))
-                    h.put("object", obj2Edit.getHint().toString());
-                else
-                    h.put("object", obj2Edit.getText().toString());
-                h.put("index", 1);
-                h.put("id", objBanner.getId());
-                mListener.onFragmentInteraction(h);
+                if (!loading) {
+                    HashMap h = new HashMap();
+                    if (obj2Edit.getText().toString().equals(""))
+                        h.put("object", obj2Edit.getHint().toString());
+                    else
+                        h.put("object", obj2Edit.getText().toString());
+                    h.put("index", 1);
+                    h.put("id", objBanner.getId());
+                    mListener.onFragmentInteraction(h);
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -109,14 +114,16 @@ public class Configs extends Fragment {
 
         obj3Edit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                HashMap h = new HashMap();
-                if (obj3Edit.getText().toString().equals(""))
-                    h.put("object", obj3Edit.getHint().toString());
-                else
-                    h.put("object", obj3Edit.getText().toString());
-                h.put("index", 2);
-                h.put("id", objBanner.getId());
-                mListener.onFragmentInteraction(h);
+                if (!loading) {
+                    HashMap h = new HashMap();
+                    if (obj3Edit.getText().toString().equals(""))
+                        h.put("object", obj3Edit.getHint().toString());
+                    else
+                        h.put("object", obj3Edit.getText().toString());
+                    h.put("index", 2);
+                    h.put("id", objBanner.getId());
+                    mListener.onFragmentInteraction(h);
+                }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -146,10 +153,12 @@ public class Configs extends Fragment {
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                HashMap h = new HashMap();
-                h.put("volume", i);
-                h.put("id", volumeBar.getId());
-                mListener.onFragmentInteraction(h);
+                if (!loading) {
+                    HashMap h = new HashMap();
+                    h.put("volume", i);
+                    h.put("id", volumeBar.getId());
+                    mListener.onFragmentInteraction(h);
+                }
             }
 
             @Override
@@ -202,6 +211,7 @@ public class Configs extends Fragment {
         obj3Edit.setText(objects.get(2));
         volumeBar.setMax((int)settings.get("maxVolume"));
         volumeBar.setProgress((int)settings.get("volume"));
+        loading = false;
     }
 
     public interface OnFragmentInteractionListener {

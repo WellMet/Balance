@@ -39,6 +39,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     private SeekBar speedSlider;
     private CountDownTimer countDownTimer;
     private int remainingTime;
+    private int chosenTime;
     private int lastTime;
     private int seconds;
     private boolean running = false;
@@ -104,8 +105,9 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 if (!running) {
                     HashMap h = new HashMap();
                     h.put("id", minute.getId());
-                    h.put("value", i1 + (minute.getValue() * 60));
+                    h.put("value", (i1 + (minute.getValue() * 60)));
                     mListener.onFragmentInteraction(h);
+                    chosenTime = (i1 + (minute.getValue() * 60));
                 }
             }
         });
@@ -153,6 +155,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                     second.setEnabled(false);
                     speedSlider.setEnabled(false);
                     startButton.setEnabled(false);
+                    minute.setMinValue(0);
                     seconds = 3;
                     new CountDownTimer(4000, 1200) {
                         HashMap h = new HashMap();
@@ -172,7 +175,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                             h.put("id", startButton.getId());
                             h.put("state", "commands");
                             mListener.onFragmentInteraction(h);
-                            lastTime = (minute.getValue() * 60000) + (second.getValue() * 1000);
+                            lastTime = chosenTime * 1000;
                             exerciseSequence(lastTime);
                         }
                     }.start();
@@ -194,6 +197,9 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     }
 
     public void onClickStop() {
+        minute.setMinValue(5);
+        second.setValue(chosenTime % 60);
+        minute.setValue((chosenTime - second.getValue()) / 60);
         running = false;
         difToggle.setEnabled(true);
         minute.setEnabled(true);
@@ -208,7 +214,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
             HashMap data = new HashMap();
             s.put("id", stopButton.getId());
             s.put("state", "stopped");
-            data.put("time", (int) ((double)((minute.getValue() * 60000) - remainingTime) / 1000));
+            data.put("time", (int) ((double)((chosenTime * 1000) - remainingTime) / 1000));
             data.put("difficulty", difToggle.isChecked() ? 2 : 1);
             data.put("speed", speedSlider.getProgress());
             s.put("data", data);
@@ -230,12 +236,13 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         if (!running) {
             HashMap h = new HashMap();
             h.put("id", numberPicker.getId());
-            h.put("value", newVal);
+            h.put("value", ((newVal * 60) + second.getValue()));
             if (newVal == 15) {
                 second.setMaxValue(0);
             } else {
                 second.setMaxValue(59);
             }
+            chosenTime = ((newVal * 60) + second.getValue());
             mListener.onFragmentInteraction(h);
         }
     }
@@ -272,6 +279,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         }
         int sec = goals.get("time") % 60;
         int min = (goals.get("time") - sec) / 60;
+        System.out.println("Setup min: " + min + ", setup sec: " + sec);
         minute.setMaxValue(15);
         minute.setMinValue(5);
         minute.setValue(min);
@@ -283,6 +291,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
         progressBar.setMax(100); // Progress bar tracks seconds
         speedSlider.setMax(10);
         speedSlider.setProgress(goals.get("speed"));
+        chosenTime = goals.get("time");
 
         Profile p = (Profile) getArguments().getSerializable("data");
         startBanner.setTextSize(1, (int)p.getSettings().get("textSize"));
@@ -295,7 +304,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
     public void exerciseSequence(int mill) {
         countDownTimer = new CountDownTimer(mill, 1000) {
             HashMap h = new HashMap();
-            int fullTime = minute.getValue() * 60000;
+            int fullTime = chosenTime * 1000;
             double voiceSteps = (int)(4000 + 4000 * ((5 - (double)(speedSlider.getProgress())) / 10));
             double progress = 0;
             public void onTick(long millisUntilFinished) {
@@ -303,8 +312,11 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 remainingTime = (int) millisUntilFinished;
                 progressBar.setProgress((int)progress);
                 int secondsUntil = (int) millisUntilFinished / 1000;
+                System.out.println("seconds until finished: " + secondsUntil);
                 int sec = secondsUntil % 60;
                 int min = (secondsUntil - sec) / 60;
+                System.out.println("seconds until conv: " + sec);
+                System.out.println("min until conv: " + min);
                 minute.setValue(min);
                 second.setValue(sec);
                 if (lastTime - millisUntilFinished >= voiceSteps) {
@@ -319,10 +331,13 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 HashMap s = new HashMap();
                 HashMap data = new HashMap();
                 remainingTime = 0;
+                second.setValue(chosenTime % 60);
+                minute.setValue((chosenTime - second.getValue()) / 60);
+                minute.setMinValue(5);
                 running = false;
                 s.put("id", stopButton.getId());
                 s.put("state", "outro");
-                data.put("time", (int) ((double)((minute.getValue() * 60000) - remainingTime) / 1000));
+                data.put("time", chosenTime);
                 data.put("difficulty", difToggle.isChecked() ? 2 : 1);
                 data.put("speed", speedSlider.getProgress());
                 s.put("data", data);
@@ -331,6 +346,7 @@ public class Exercise extends Fragment implements CompoundButton.OnCheckedChange
                 mListener.onFragmentInteraction(s);
                 difToggle.setEnabled(true);
                 minute.setEnabled(true);
+                second.setEnabled(true);
                 speedSlider.setEnabled(true);
                 startButton.setEnabled(true);
                 startBanner.setText("Start");

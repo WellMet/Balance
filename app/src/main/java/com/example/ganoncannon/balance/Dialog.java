@@ -140,6 +140,7 @@ public class Dialog extends DialogFragment {
 
         fullPercent.setText(Integer.toString(data.getOverallProgress(week)));
         fullWeek.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
+        fullWeek.setText("Week " + week);
         fullWeek.setTextColor(getResources().getColor(colorId));
 
         col1.setTextColor(getResources().getColor(colorId));
@@ -151,24 +152,30 @@ public class Dialog extends DialogFragment {
         progressDrawable = attemptsBar.getProgressDrawable().mutate();
         progressDrawable.setColorFilter(getResources().getColor(colorId), android.graphics.PorterDuff.Mode.SRC_IN);
         attemptsBar.setProgressDrawable(progressDrawable);
+        attemptsBar.setMax(50);
         attemptsBar.setProgress(data.getProgressScore(week, "attempts"));
+        System.out.println("attempts progres = " + data.getProgressScore(week, "attempts"));
 
         timeBanner.setTextSize(1, (int)p.getSettings().get("textSize") - 5);
         progressDrawable = timeBar.getProgressDrawable().mutate();
         progressDrawable.setColorFilter(getResources().getColor(colorId), android.graphics.PorterDuff.Mode.SRC_IN);
         timeBar.setProgressDrawable(progressDrawable);
+        timeBar.setMax(25);
         timeBar.setProgress(data.getProgressScore(week, "time"));
+        System.out.println("attempts time = " + data.getProgressScore(week, "time"));
 
         speedBanner.setTextSize(1, (int)p.getSettings().get("textSize") - 5);
         progressDrawable = speedBar.getProgressDrawable().mutate();
         progressDrawable.setColorFilter(getResources().getColor(colorId), android.graphics.PorterDuff.Mode.SRC_IN);
         speedBar.setProgressDrawable(progressDrawable);
+        speedBar.setMax(15);
         speedBar.setProgress(data.getProgressScore(week, "speed"));
 
         diffBanner.setTextSize(1, (int)p.getSettings().get("textSize") - 5);
         progressDrawable = diffBar.getProgressDrawable().mutate();
         progressDrawable.setColorFilter(getResources().getColor(colorId), android.graphics.PorterDuff.Mode.SRC_IN);
         diffBar.setProgressDrawable(progressDrawable);
+        diffBar.setMax(10);
         diffBar.setProgress(data.getProgressScore(week, "difficulty"));
     }
 
