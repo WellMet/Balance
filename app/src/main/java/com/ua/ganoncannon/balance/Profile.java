@@ -110,6 +110,7 @@ public class Profile implements Serializable{
 
     public void setGoals(HashMap goals) {
         this.goals = goals;
+        this.data.setGoals(goals);
     }
 
     public HashMap getSettings() {

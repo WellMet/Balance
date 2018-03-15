@@ -123,4 +123,8 @@ public class Data implements Serializable{
             return 0;
         }
     }
+
+    public void setGoals(HashMap h) {
+        goals = h;
+    }
 }

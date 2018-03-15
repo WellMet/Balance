@@ -6,4 +6,5 @@
     <color name="colorAcc2">#1b9e77</color>
     <color name="colorAcc3">#d95f02</color>
     <color name="colorAcc4">#7570b3</color>
+    <color name="darkText">#404040</color>
 </resources>

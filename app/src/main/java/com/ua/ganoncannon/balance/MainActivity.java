@@ -1,8 +1,11 @@
 package com.ua.ganoncannon.balance;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             if (controller.getState().equals("idle")) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                boolean previouslyStarted = false;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         item.setChecked(true);
@@ -52,16 +57,46 @@ public class MainActivity extends AppCompatActivity implements
                         item.setChecked(true);
                         loadFragment(new Exercise(), controller.getUser());
                         curFrag = 1;
+
+                        previouslyStarted = prefs.getBoolean("first_time_exercise", false);
+                        if(!previouslyStarted) {
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putBoolean("first_time_exercise", Boolean.TRUE);
+                            edit.commit();
+
+                            // Show first exercise activity
+                            startActivity(new Intent(MainActivity.this, IntroExerciseActivity.class));
+                        }
                         break;
                     case R.id.navigation_history:
                         item.setChecked(true);
                         loadFragment(new History(), controller.getUser());
                         curFrag = 2;
+
+                        previouslyStarted = prefs.getBoolean("first_time_history", false);
+                        if(!previouslyStarted) {
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putBoolean("first_time_history", Boolean.TRUE);
+                            edit.commit();
+
+                            // Show first exercise activity
+                            startActivity(new Intent(MainActivity.this, IntroHistoryActivity.class));
+                        }
                         break;
                     case R.id.navigation_settings:
                         item.setChecked(true);
                         loadFragment(new Configs(), controller.getUser());
                         curFrag = 3;
+
+                        previouslyStarted = prefs.getBoolean("first_time_settings", false);
+                        if(!previouslyStarted) {
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putBoolean("first_time_settings", Boolean.TRUE);
+                            edit.commit();
+
+                            // Show first exercise activity
+                            startActivity(new Intent(MainActivity.this, IntroSettingsActivity.class));
+                        }
                         break;
                 }
             }
@@ -91,6 +126,28 @@ public class MainActivity extends AppCompatActivity implements
 
         gestureDetector = new GestureDetector(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(getIntent().getExtras() != null) {
+            if (getIntent().getExtras().get("introGoals") != null) {
+                controller.getUser().setGoals((HashMap) getIntent().getExtras().get("introGoals"));
+            }
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean("first_time_main", false);
+        if(!previouslyStarted) {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("first_time_main", Boolean.TRUE);
+            edit.commit();
+
+            // Show first startup activity
+            startActivity(new Intent(MainActivity.this, IntroActivity.class));
+        }
     }
 
 
