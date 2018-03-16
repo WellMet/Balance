@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="\nPlace your reaching objects in the patterns as seen below\n You can use a chair for help!\n"
+                android:text="\nPlace your reaching objects in the patterns as seen below.\n\n You can use a chair for help!\n"
                 android:textSize="28dp" />
 
             <ImageView
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Press Start"
+                android:text="Starting an Exercise"
                 android:textColor="@color/colorAccent"
                 android:textSize="30dp" />
 
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="\nWhile in a standing or sitting position, press the Start button and listen for exercise instructions.\n\nGrip the chair and stop if you need to!\n"
+                android:text="\n1. Open the Exercise Screen. \n2. Setup the exercise if it differs from your goals. \n3. While in a standing or sitting position, press the Start button and listen for exercise instructions.\n\nGrip the chair and stop if you need to!\n"
                 android:textSize="28dp" />
 
             <com.ua.ganoncannon.balance.GifImageView
@@ -106,7 +106,7 @@
             <Button
                 android:id="@+id/button"
                 android:layout_width="200dp"
-                android:layout_height="50dp"
+                android:layout_height="65dp"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="Close" />
@@ -114,8 +114,8 @@
             <View
                 android:id="@+id/view12"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@android:color/background_light" />
+                android:layout_height="50dp"
+                android:background="?android:attr/colorBackground" />
 
         </LinearLayout>
 

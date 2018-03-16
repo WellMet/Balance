@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Balance</string>
+    <string name="app_name">UA Balance</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -13,8 +13,114 @@
     <string name="speed_banner">Speed</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_intro">IntroActivity</string>
+    <string name="notify">Based on your goals, today is the day to practice your balance!</string>
+
+    <string name="welcome_title">
+        <font size="32">Navigation</font>
+    </string>
+    <string name="home_title">
+        <font size="32">Home Screen</font>
+    </string>
+    <string name="tutorial_title">
+        <font size="32">Tutorials</font>
+    </string>
+    <string name="help_title">
+        <font size="32">Help</font>
+    </string>
+
+    <string name="home_string">
+        <font size="26">The home screen shows you your weekly goal progress, and a button to the exercise screen.</font>
+    </string>
+    <string name="intro_string">
+        <font size="26">You can use the bottom navigation bar to switch screens.</font>
+    </string>
+    <string name="action_string">
+        <font size="26">You can press the Info Button at the top at any time to review these tutorials.</font>
+    </string>
+    <string name="help_string">
+        <font size="26">If you need help setting up the exercise, press the Help Button at the top, or swipe left on any screen.</font>
+    </string>
+
+
+    <string name="exercise_title">
+        <font size="32">Exercise</font>
+    </string>
+    <string name="exercise_dif">
+        <font size="32">Exercise - Difficulty</font>
+    </string>
+    <string name="exercise_time">
+        <font size="32">Exercise - Time</font>
+    </string>
+    <string name="exercise_speed">
+        <font size="32">Exercise - Speed</font>
+    </string>
+    <string name="exercising">
+        <font size="32">Exercising</font>
+    </string>
+
+    <string name="exercise_string">
+        <font size="26">Welcome to the Exercise Screen.  This is where you will configure and start an exercise.</font>
+    </string>
+    <string name="edif_string">
+        <font size="26">You can toggle the difficulty between ordered (predictable) or random.</font>
+    </string>
+    <string name="etime_string">
+        <font size="26">Set the time like a stopwatch.  No more than 15 minutes, no less than 5!</font>
+    </string>
+    <string name="espeed_string">
+        <font size="26">Slide the speed slower or faster, between +50% and -50%.</font>
+    </string>
+    <string name="e_string">
+        <font size="26">When you\'re all set press start - after a brief countdown the exercise will start.  You may pause and stop at anytime.</font>
+    </string>
+
+
+    <string name="h_title">
+        <font size="32">History - Week to Week</font>
+    </string>
+    <string name="d_title">
+        <font size="32">History - Details</font>
+    </string>
+
+    <string name="h_string">
+        <font size="26">This is the histroy screen.  You can see your week to week goal completion percentage for the past 3 weeks. Tapping any percent bubble gives you more information...</font>
+    </string>
+    <string name="d_string">
+        <font size="26">When you tap a percent bubble, you will be presented with a scrollable view of your individual goal completion for that week!</font>
+    </string>
+
+
+    <string name="s_title">
+        <font size="32">Settings</font>
+    </string>
+    <string name="sfont_title">
+        <font size="32">Settings - Font</font>
+    </string>
+    <string name="sobject_title">
+        <font size="32">Settings - Objects</font>
+    </string>
+    <string name="svolume_title">
+        <font size="32">Settings - Volume</font>
+    </string>
+    <string name="sgoals_title">
+        <font size="32">Settings - Goals</font>
+    </string>
+
+    <string name="s_string">
+        <font size="26">Welcome to the settings screen. This is where you can tweak app settings, as well as change your goals.</font>
+    </string>
+    <string name="sf_string">
+        <font size="26">Sometimes text is hard to see. You can adjust the size in settings.</font>
+    </string>
+    <string name="so_string">
+        <font size="26">You may change the names of the objects that you place for the exercise if you'd like.</font>
+    </string>
+    <string name="sv_string">
+        <font size="26">Sometimes it\'s hard to hear what people say. You can adjust how loud the app talks in settings.</font>
+    </string>
+    <string name="sg_string">
+        <font size="26">If you\'d like to revisit your goals, you can change them at any time in the settings.</font>
+    </string>
 </resources>

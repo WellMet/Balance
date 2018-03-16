@@ -1,7 +1,6 @@
 package com.ua.ganoncannon.balance;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,15 +8,19 @@ import android.support.v4.app.Fragment;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
+import java.util.HashMap;
 
-public class IntroHistoryActivity extends AppIntro {
+
+public class IntroHomeActivity extends AppIntro {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.h_title), getResources().getString(R.string.h_string), R.drawable.history, getResources().getColor(R.color.colorPrimary)));
-        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.d_title), getResources().getString(R.string.d_string), R.drawable.blowout, getResources().getColor(R.color.colorAccent)));
-
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.home_title), getResources().getString(R.string.home_string), R.drawable.home, getResources().getColor(R.color.colorPrimary)));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.welcome_title), getResources().getString(R.string.intro_string), R.drawable.navbar, getResources().getColor(R.color.colorAccent)));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.tutorial_title), getResources().getString(R.string.action_string), R.drawable.tutorially, getResources().getColor(R.color.colorAcc2)));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.help_title), getResources().getString(R.string.help_string), R.drawable.helper, getResources().getColor(R.color.colorAcc3)));
 
         // OPTIONAL METHODS
         // Override bar/separator color.
@@ -32,15 +35,15 @@ public class IntroHistoryActivity extends AppIntro {
     @Override
     public void onSkipPressed(Fragment currentFragment) {
         super.onSkipPressed(currentFragment);
-        //startActivity(new Intent(IntroHistoryActivity.this, MainActivity.class));
-        finish();
+        Intent newIntent = new Intent(IntroHomeActivity.this, MainActivity.class);
+        startActivity(newIntent);
     }
 
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
-        //startActivity(new Intent(IntroHistoryActivity.this, MainActivity.class));
-        finish();
+        Intent newIntent = new Intent(IntroHomeActivity.this, MainActivity.class);
+        startActivity(newIntent);
     }
 
     @Override

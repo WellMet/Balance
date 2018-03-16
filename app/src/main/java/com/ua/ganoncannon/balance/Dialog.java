@@ -136,7 +136,7 @@ public class Dialog extends DialogFragment {
         fullPercent.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
         fullPercent.setTextColor(getResources().getColor(colorId));
 
-        fullPercent.setText(Integer.toString(data.getOverallProgress(week)));
+        fullPercent.setText(Integer.toString(data.getOverallProgress(week)) + "%");
         fullWeek.setTextSize(1, (int)p.getSettings().get("textSize") - 3);
         fullWeek.setText("Week " + week);
         fullWeek.setTextColor(getResources().getColor(colorId));

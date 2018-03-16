@@ -127,4 +127,8 @@ public class Data implements Serializable{
     public void setGoals(HashMap h) {
         goals = h;
     }
+
+    public void setGoal(String s, int i) {
+        goals.put(s, i);
+    }
 }

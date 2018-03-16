@@ -27,6 +27,10 @@
             android:label="@string/title_activity_intro"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
+            android:name=".IntroHomeActivity"
+            android:label="IntroHomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".IntroExerciseActivity"
             android:label="IntroExerciseActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
@@ -38,6 +42,7 @@
             android:name=".IntroSettingsActivity"
             android:label="IntroSettingsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <receiver android:name=".Notifier" />
     </application>
 
 </manifest>

@@ -40,14 +40,14 @@ public class Profile implements Serializable{
             settings.put("volume", maxVolume);
             settings.put("brightness", 255);
             settings.put("maxVolume", maxVolume);
+            goals = new HashMap<String, Integer>();
+            goals.put("attempts", 3);
+            goals.put("difficulty", 1);
+            goals.put("speed", 5);
+            goals.put("time", 900);
         }
         voice = new VoiceGeneration(settings);
         controller = cont;
-        goals = new HashMap<String, Integer>();
-        goals.put("attempts", 3);
-        goals.put("difficulty", 1);
-        goals.put("speed", 5);
-        goals.put("time", 300);
         data = new Data(goals, context);
     }
 
@@ -56,6 +56,12 @@ public class Profile implements Serializable{
             FileOutputStream fstream = new FileOutputStream(context + "settings.ser");
             ObjectOutputStream ostream = new ObjectOutputStream(fstream);
             ostream.writeObject(settings);
+            ostream.close();
+            fstream.close();
+
+            FileOutputStream f2stream = new FileOutputStream(context + "goals.ser");
+            ObjectOutputStream o2stream = new ObjectOutputStream(fstream);
+            ostream.writeObject(goals);
             ostream.close();
             fstream.close();
             //System.out.println("write settings success");
@@ -69,6 +75,12 @@ public class Profile implements Serializable{
             FileInputStream istream = new FileInputStream(context + "settings.ser");
             ObjectInputStream ostream = new ObjectInputStream(istream);
             settings = (HashMap) ostream.readObject();
+            ostream.close();
+            istream.close();
+
+            FileInputStream i2stream = new FileInputStream(context + "goals.ser");
+            ObjectInputStream o2stream = new ObjectInputStream(istream);
+            goals = (HashMap) ostream.readObject();
             ostream.close();
             istream.close();
             //System.out.println("read settings success");
@@ -111,6 +123,7 @@ public class Profile implements Serializable{
     public void setGoals(HashMap goals) {
         this.goals = goals;
         this.data.setGoals(goals);
+        writeSettings();
     }
 
     public HashMap getSettings() {
@@ -149,6 +162,12 @@ public class Profile implements Serializable{
 
     public void setBrightness(int b) {
         settings.put("brightness", b);
+        writeSettings();
+    }
+
+    public void setGoal(String s, int i) {
+        goals.put(s, i);
+        data.setGoal(s, i);
         writeSettings();
     }
 }

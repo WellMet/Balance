@@ -165,13 +165,13 @@ public class History extends Fragment {
         }
         // Set GUI
         firstWeek.setText("Week " + week1);
-        firstPercent.setText(Integer.toString(prog1));
+        firstPercent.setText(Integer.toString(prog1) + "%");
         firstProgress.setProgress(prog1);
         secondWeek.setText("Week " + week2);
-        secondPercent.setText(Integer.toString(prog2));
+        secondPercent.setText(Integer.toString(prog2) + "%");
         secondProgress.setProgress(prog2);
         thirdWeek.setText("Week " + week3);
-        thirdPercent.setText(Integer.toString(prog3));
+        thirdPercent.setText(Integer.toString(prog3) + "%");
         thirdProgress.setProgress(prog3);
 
         Profile p = (Profile) getArguments().getSerializable("data");

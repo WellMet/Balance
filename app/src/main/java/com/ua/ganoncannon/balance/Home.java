@@ -103,12 +103,10 @@ public class Home extends Fragment implements View.OnClickListener {
         switch(view.getId()) {
             case R.id.currentProgress:
                 h.put("id", R.id.currentProgress);
-                h.put("menu", navigation.getMenu().getItem(2));
                 mListener.onFragmentInteraction(h);
                 break;
             case R.id.quickAction:
                 h.put("id", R.id.quickAction);
-                h.put("menu", navigation.getMenu().getItem(1));
                 mListener.onFragmentInteraction(h);
                 break;
         }
@@ -128,7 +126,7 @@ public class Home extends Fragment implements View.OnClickListener {
         } else {
             progress.setProgress(0);
         }
-        progBanner.setText(Integer.toString(progress.getProgress()));
+        progBanner.setText(Integer.toString(progress.getProgress()) + "%");
         Profile p = (Profile) getArguments().getSerializable("data");
         banner.setTextSize(1, (int)p.getSettings().get("textSize"));
         progBanner.setTextSize(1, (int)p.getSettings().get("textSize"));

@@ -21,19 +21,22 @@ public class IntroActivity extends AppIntro implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String introString = "You can use the bottom navigation bar to switch screens";
-        addSlide(AppIntroFragment.newInstance("Welcome to UA Balance", introString, R.drawable.navbar, getResources().getColor(R.color.colorPrimary)));
-
         String homeString = "The home screen shows you your weekly goal progress, and a button to the exercise screen";
-        addSlide(AppIntroFragment.newInstance("Home Screen", homeString, R.drawable.home, getResources().getColor(R.color.colorAccent)));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.home_title), getResources().getString(R.string.home_string), R.drawable.home, getResources().getColor(R.color.colorPrimary)));
+
+        String introString = "You can use the bottom navigation bar to switch screens";
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.welcome_title), getResources().getString(R.string.intro_string), R.drawable.navbar, getResources().getColor(R.color.colorAccent)));
 
         // Goal slides
-        String goalString = "Set your initial goals here!";
-        //addSlide(AppIntroFragment.newInstance("First Goals", goalString, R.drawable.home, getResources().getColor(R.color.colorAcc2)));
         addSlide(WeekSlide.newInstance(R.layout.fragment_week_slide));
         addSlide(TimeSlide.newInstance(R.layout.fragment_time_slide));
         addSlide(SpeedSlide.newInstance(R.layout.fragment_speed_slide));
         addSlide(DifSlide.newInstance(R.layout.fragment_dif_slide));
+
+        String actionbar = "You can press the Info Button at the top at any time to review these tutorials.";
+        String help = "If you need help setting up the exercise, press the Help Button at the top, or swipe left on any screen.";
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.tutorial_title), getResources().getString(R.string.action_string), R.drawable.tutorially, getResources().getColor(R.color.colorAccent)));
+        addSlide(AppIntroFragment.newInstance(getResources().getString(R.string.help_title), getResources().getString(R.string.help_string), R.drawable.helper, getResources().getColor(R.color.colorAcc2)));
 
         // OPTIONAL METHODS
         // Override bar/separator color.

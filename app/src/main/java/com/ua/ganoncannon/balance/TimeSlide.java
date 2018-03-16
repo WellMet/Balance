@@ -66,7 +66,7 @@ public class TimeSlide extends Fragment {
 
         min.setMaxValue(15);
         min.setMinValue(5);
-        min.setValue(5);
+        min.setValue(15);
         sec.setMaxValue(59);
         sec.setMinValue(0);
         sec.setValue(0);
