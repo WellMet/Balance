@@ -108,15 +108,16 @@
             android:id="@+id/difBanner"
             android:layout_width="151dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:gravity="center"
             android:text="Difficulty"
             android:textSize="35dp"
-            app:layout_constraintBottom_toTopOf="@+id/minute"
+            app:layout_constraintBottom_toTopOf="@+id/sep"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.852" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/startBanner"
@@ -155,6 +156,7 @@
             android:id="@+id/difToggle"
             android:layout_width="180dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="8dp"
@@ -164,10 +166,12 @@
             android:textOff="Ordered"
             android:textOn="Random"
             android:textSize="35dp"
+            app:layout_constraintBottom_toTopOf="@+id/sep"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/difBanner"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/stopButton"
@@ -196,13 +200,12 @@
             app:layout_constraintEnd_toStartOf="@+id/sep"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/difToggle"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="@+id/sep" />
 
         <NumberPicker
             android:id="@+id/second"
             android:layout_width="90dp"
-            android:layout_height="115dp"
+            android:layout_height="116dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -212,8 +215,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/sep"
-            app:layout_constraintTop_toBottomOf="@+id/difToggle"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/sep" />
 
         <TextView
             android:id="@+id/sep"
@@ -244,12 +246,11 @@
             android:text="M"
             android:textColor="@color/colorAccent"
             android:textSize="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/freq"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
             app:layout_constraintEnd_toStartOf="@+id/minute"
             app:layout_constraintHorizontal_bias="0.775"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/difBanner"
-            app:layout_constraintVertical_bias="0.193" />
+            app:layout_constraintTop_toTopOf="@+id/sep" />
 
         <TextView
             android:id="@+id/textView12"
@@ -262,12 +263,11 @@
             android:text="S"
             android:textColor="@color/colorAccent"
             android:textSize="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/freq3"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.255"
             app:layout_constraintStart_toEndOf="@+id/second"
-            app:layout_constraintTop_toBottomOf="@+id/difToggle"
-            app:layout_constraintVertical_bias="0.191" />
+            app:layout_constraintTop_toTopOf="@+id/sep" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

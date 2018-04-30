@@ -109,7 +109,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
         }
         // New command duration:
         int duration = COMMAND_DURATION + (int)(COMMAND_DURATION * ((double)(5 - chosenSpeed) / 10));
-        int numcommands = (int)((double)(chosenTime / duration)) + 10;
+        int numcommands = 500;
 
         // Generate the commands: direction + object 1,2,3,3,2,1; other_direction + object 1,2,3,3,2,1
         for(int i = 0; i < numcommands; i++) {
@@ -134,7 +134,7 @@ public class VoiceGeneration implements TextToSpeech.OnInitListener {
         int directionIndex;
         // New command duration:
         int duration = COMMAND_DURATION + (int)(COMMAND_DURATION * ((double)(5 - chosenSpeed) / 10));
-        int numcommands = (int)((double)(chosenTime / duration)) + 10;
+        int numcommands = 500;
 
         for(int i = 0; i < numcommands; i++) {
             objectIndex = r1.nextInt(objects.size());

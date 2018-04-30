@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         History.OnFragmentInteractionListener,
         Configs.OnFragmentInteractionListener,
         Help.OnFragmentInteractionListener,
-        Dialog.DialogListener, GestureDetector.OnGestureListener {
+        Dialog.DialogListener {
 
     public Controller controller;
     public AudioManager audMgr;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements
     GestureDetector gestureDetector;
     private Toolbar toolbar;
 
-    private static final int SWIPE_THRESHOLD = 135;
-    private static final int SWIPE_VELOCITY_THRESHOLD = 135;
+    private static final int SWIPE_THRESHOLD = 160;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 160;
 
     public boolean notifScheduled = false;
 
@@ -184,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        gestureDetector = new GestureDetector(this);
         scheduleNotification();
     }
 
@@ -296,70 +295,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        System.out.println("lul");
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        super.dispatchTouchEvent(ev);
-        return gestureDetector.onTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        boolean result = false;
-        try {
-            float diffY = e2.getY() - e1.getY();
-            float diffX = e2.getX() - e1.getX();
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffX > 0) {
-                    } else {
-                        // Swipe Left
-                        System.out.println("swiped left lul");
-                        FragmentManager fm = getSupportFragmentManager();
-                        Help help = Help.newInstance(controller.getUser(), "");
-                        help.show(fm, "fragment_help");
-                    }
-                    result = true;
-                }
-            }
-            else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffY > 0) {
-                    // Swipe bottom
-                } else {
-                    // Swipe top
-                }
-                result = true;
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return result;
-    }
 
     // Notifications
     public void scheduleNotification() {

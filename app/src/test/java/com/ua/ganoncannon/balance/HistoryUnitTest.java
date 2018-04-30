@@ -19,7 +19,7 @@ public class HistoryUnitTest {
         String week = Integer.toString(Calendar.WEEK_OF_YEAR);
         assertEquals(5, (int) controller.getUser().getData().getHistory().get(week).get(0).get("speed"));
         assertEquals(1, (int) controller.getUser().getData().getHistory().get(week).get(0).get("difficulty"));
-        assertEquals(300, (int) controller.getUser().getData().getHistory().get(week).get(0).get("time"));
+        assertEquals(900, (int) controller.getUser().getData().getHistory().get(week).get(0).get("time"));
     }
 
     @Test
@@ -28,7 +28,7 @@ public class HistoryUnitTest {
         populateTestData();
         String week = Integer.toString(Calendar.WEEK_OF_YEAR);
         int runscore = (int)(0.5 * ((double)1/3) * 100);
-        int timescore = (int)(0.25 * ((double)300/300) * 100);
+        int timescore = (int)(0.25 * ((double)900/900) * 100);
         int speedscore = (int)(0.15 * ((double)5/5) * 100);
         int difscore = (int)(0.10 * ((double)2/2) * 100);
 
@@ -40,7 +40,7 @@ public class HistoryUnitTest {
         HashMap newEntry = new HashMap();
         newEntry.put("speed", 5);
         newEntry.put("difficulty", 1);
-        newEntry.put("time", 300);
+        newEntry.put("time", 900);
         String week = Integer.toString(Calendar.WEEK_OF_YEAR);
         if (controller.getUser().getData().getHistory().get(week) != null) {
             controller.getUser().getData().getHistory().get(week).add(newEntry);

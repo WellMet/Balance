@@ -85,7 +85,7 @@
     </string>
 
     <string name="h_string">
-        <font size="26">This is the histroy screen.  You can see your week to week goal completion percentage for the past 3 weeks. Tapping any percent bubble gives you more information...</font>
+        <font size="26">This is the history screen.  You can see your week to week goal completion percentage for the past 3 weeks. Tapping any percent bubble gives you more information...</font>
     </string>
     <string name="d_string">
         <font size="26">When you tap a percent bubble, you will be presented with a scrollable view of your individual goal completion for that week!</font>
@@ -99,7 +99,7 @@
         <font size="32">Settings - Font</font>
     </string>
     <string name="sobject_title">
-        <font size="32">Settings - Objects</font>
+        <font size="32">Settings - Targets</font>
     </string>
     <string name="svolume_title">
         <font size="32">Settings - Volume</font>
@@ -115,7 +115,7 @@
         <font size="26">Sometimes text is hard to see. You can adjust the size in settings.</font>
     </string>
     <string name="so_string">
-        <font size="26">You may change the names of the objects that you place for the exercise if you'd like.</font>
+        <font size="26">You may change the names of the targets that you place for the exercise if you'd like.</font>
     </string>
     <string name="sv_string">
         <font size="26">Sometimes it\'s hard to hear what people say. You can adjust how loud the app talks in settings.</font>
