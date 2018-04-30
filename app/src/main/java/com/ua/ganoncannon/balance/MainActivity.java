@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setContentTitle("UA Balance Reminder");
             builder.setContentText("According to your goals, you have " + attemptsLeft + " balance sessions left this week.  Come practice!");
-            builder.setSmallIcon(R.drawable.app_icon);
+            builder.setSmallIcon(R.drawable.appicon);
             return builder.build();
         } else {
             return null;
