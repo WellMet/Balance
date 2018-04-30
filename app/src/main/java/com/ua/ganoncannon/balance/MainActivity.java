@@ -48,11 +48,7 @@ public class MainActivity extends AppCompatActivity implements
     public int originalVolume;
     public int originalBrightness;
     public int curFrag = 0;
-    GestureDetector gestureDetector;
     private Toolbar toolbar;
-
-    private static final int SWIPE_THRESHOLD = 160;
-    private static final int SWIPE_VELOCITY_THRESHOLD = 160;
 
     public boolean notifScheduled = false;
 
@@ -285,10 +281,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
-    }
 
     @Override
     public void onDialogInteraction(Uri uri) {
